@@ -1,7 +1,7 @@
 latest=2.9.7
 url=http://code.taobao.org/p/mychrome/src/trunk/release/MyChrome_v2.9.5.zip?orig
-update=å¢åŠ  64 ä½ Chrome ç¨³å®šç‰ˆï¼ˆStableï¼‰æ›´æ–°æ”¯æŒã€‚
+update=Ôö¼Ó 64 Î» Chrome ÎÈ¶¨°æ£¨Stable£©¸üĞÂÖ§³Ö¡£
 
 latest_x64=2.9.7
 url_x64=http://code.taobao.org/p/mychrome/src/trunk/release/MyChrome_v2.9.5_x64.zip?orig
-update_x64=å¢åŠ  64 ä½ Chrome ç¨³å®šç‰ˆï¼ˆStableï¼‰æ›´æ–°æ”¯æŒã€‚
+update_x64=Ôö¼Ó 64 Î» Chrome ÎÈ¶¨°æ£¨Stable£©¸üĞÂÖ§³Ö¡£
