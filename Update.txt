@@ -1,4 +1,4 @@
-﻿latest=2.9.7
+latest=2.9.7
 url=http://code.taobao.org/p/mychrome/src/trunk/release/MyChrome_v2.9.6.zip?orig
 update=1. 修正近期通过Go**更新，获取的文件大小为0更新失败的问题。\n2. 修正本地Chromium revision 显示错误。\n3. 暂时解决在不同电脑运行扩展全部丢失的问题。
 
