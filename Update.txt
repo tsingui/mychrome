@@ -1,4 +1,4 @@
-﻿latest=2.9.7
+latest=2.9.7
 url=http://code.taobao.org/p/mychrome/src/trunk/release/MyChrome_v2.9.5.zip?orig
 update=增加 64 位 Chrome 稳定版（Stable）更新支持。
 
