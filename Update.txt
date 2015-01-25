@@ -1,7 +1,7 @@
-latest=2.9.5
-url=http://my-chrome.googlecode.com/svn/download/MyChrome_v2.9.5.zip
+latest=2.9.6
+url=http://code.taobao.org/p/mychrome/src/trunk/release/MyChrome_v2.9.5.zip?orig
 update=增加 64 位 Chrome 稳定版（Stable）更新支持。
 
-latest_x64=2.9.5
-url_x64=http://my-chrome.googlecode.com/svn/download/MyChrome_v2.9.5_x64.zip
+latest_x64=2.9.6
+url_x64=http://code.taobao.org/p/mychrome/src/trunk/release/MyChrome_v2.9.5_x64.zip?orig
 update_x64=增加 64 位 Chrome 稳定版（Stable）更新支持。
