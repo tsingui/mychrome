@@ -1,6 +1,8 @@
 ﻿#NoTrayIcon
 #Region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_Icon=Icon_1.ico
+#AutoIt3Wrapper_Compile_Both=y
+#AutoIt3Wrapper_UseX64=y
 #AutoIt3Wrapper_Res_Comment=可自动更新的 Google Chrome 便携版
 #AutoIt3Wrapper_Res_Description=Google Chrome 便携版
 #AutoIt3Wrapper_Res_Fileversion=2.9.6.0
@@ -362,7 +364,7 @@ Func GetChromeLastChange($path)
 EndFunc
 
 Func CheckEnv()
-	Local $var, $EnvString, $variations_seed, $variations_seed_signature
+	Local $oldstr, $var, $EnvString, $variations_seed, $variations_seed_signature
 	$EnvString = FileRead($UserDataDir & "\EnvId")
 	If $EnvString = $EnvID Then Return
 	FileDelete($UserDataDir & "\EnvId")
@@ -371,17 +373,19 @@ Func CheckEnv()
 		$EnvString = FileWrite($UserDataDir & "\EnvId", $EnvID)
 		FileInstall(".\Local State.MyChrome", $UserDataDir & "\Local State.MyChrome", 1)
 		$var = FileRead($UserDataDir & "\Local State.MyChrome")
+		FileDelete($UserDataDir & "\Local State.MyChrome")
 		Local $match = StringRegExp($var, '(?im)^ *("variations_seed": *"\S+")', 1)
 		If not @error Then $variations_seed = $match[0]
 		Local $match = StringRegExp($var, '(?im)^ *("variations_seed_signature": *"\S+")', 1)
 		If not @error Then $variations_seed_signature = $match[0]
-		$var = FileRead($UserDataDir & "\Local State")
-		$var = StringRegExpReplace($var, '(?i)"variations_seed": *"\S+"', $variations_seed)
+		$oldstr = FileRead($UserDataDir & "\Local State")
+		$var = StringRegExpReplace($oldstr, '(?i)"variations_seed": *"\S+"', $variations_seed)
 		$var = StringRegExpReplace($var, '(?i)"variations_seed_signature": *"\S+"', $variations_seed_signature)
-		local $file = FileOpen($UserDataDir & "\Local State", 2+256)
-		FileWrite($file, $var)
-		FileClose($file)
-		FileDelete($UserDataDir & "\Local State.MyChrome")
+		If $var <> $oldstr Then
+			local $file = FileOpen($UserDataDir & "\Local State", 2+256)
+			FileWrite($file, $var)
+			FileClose($file)
+		EndIf
 	EndIf
 EndFunc
 
@@ -632,9 +636,8 @@ Func CheckAppUpdate()
 	$update = StringReplace($match[0], "\n", @CRLF)
 
 	If $AutoUpdateApp = 1 Then
-		$msg = MsgBox(68, 'MyChrome', "MyChrome 可更新至 " & $LatestAppVer & ' 版！' & @crlf & @crlf & _
-				'更新内容：' & @crlf & _
-				$update & @CRLF & @CRLF & "是否更新？")
+	$msg = MsgBox(68, 'MyChrome', 'MyChrome 可以更新，是否立即下载？' & @crlf & @crlf & _
+		'您的版本：' & $AppVersion & '，' & '最新版本：' & $LatestAppVer & @crlf & @crlf & $update)
 		If $msg <> 6 Then Return
 	EndIf
 	Local $temp = @ScriptDir & "\MyChrome_temp"
@@ -1243,8 +1246,8 @@ EndFunc   ;==>ShowLatestChromeVer
 
 ; 打开网站
 Func OpenWebsite()
-	ShellExecute("http://code.google.com/p/my-chrome/")
-;~ 	ShellExecute("http://bbs.kafan.cn/thread-1725205-1-1.html")
+;~ 	ShellExecute("http://code.google.com/p/my-chrome/")
+	ShellExecute("http://bbs.kafan.cn/thread-1725205-1-1.html")
 EndFunc   ;==>OpenWebsite
 
 ;~ 显示下载地址
@@ -1528,7 +1531,7 @@ EndFunc   ;==>CancelUpdate
 ;~ 5 - The extended value for the download. The value is arbitrary and is primarily only useful to the AutoIt developers.
 ;~ 从网络获取 chrome 最新版本号
 Func GetLatestVersion($Channel, $x86 = 0, $ProxySever = "", $ProxyPort = "")
-	Local $urlbase, $var, $LatestVer, $LatestUrl, $i
+	Local $host, $urlbase, $var, $LatestVer, $LatestUrl, $i
 	Local $WinVer = WinVer()
 	Local $OSArch = StringLower(@OSArch)
 	$x86 = $x86 * 1
@@ -1546,8 +1549,7 @@ Func GetLatestVersion($Channel, $x86 = 0, $ProxySever = "", $ProxyPort = "")
 	; https://storage.googleapis.com/chromium-browser-continuous/index.html?path=Win/
 	; https://storage.googleapis.com/chromium-browser-continuous/index.html?path=Win_x64/
 	If StringInStr($Channel, "Chromium") Then
-		Local $arr[4] = ["https://storage.googleapis.com", "https://storage.googleapis.com", _
-				"https://storage.googleapis.com", "https://storage.googleapis.com"]
+		$host = "https://storage.googleapis.com"
 		If $Channel = "Chromium-Continuous" Then
 			If $x86 Or $OSArch = "x86" Then
 				$urlbase = "chromium-browser-continuous/Win"
@@ -1557,14 +1559,14 @@ Func GetLatestVersion($Channel, $x86 = 0, $ProxySever = "", $ProxyPort = "")
 		Else
 			$urlbase = "chromium-browser-snapshots/Win"
 		EndIf
-		For $i = 0 To UBound($arr) - 1
-			_SetVar("DLInfo", "|||||从服务器获取 Chromium 更新信息... 第 " & $i + 1 & " 次尝试")
-			$hConnect = _WinHttpConnect($hHTTPOpen, $arr[$i])
+		For $i = 1 To 3
+			_SetVar("DLInfo", "|||||从服务器获取 Chromium 更新信息... 第 " & $i & " 次尝试")
+			$hConnect = _WinHttpConnect($hHTTPOpen, $host)
 			$var = _WinHttpSimpleSSLRequest($hConnect, "GET", $urlbase & "/LAST_CHANGE")
 			_WinHttpCloseHandle($hConnect)
 			If StringIsDigit($var) And $var > 0 Then
 				$LatestVer = $var
-				$LatestUrl = $arr[$i] & "/" & $urlbase & "/" & $var & "/mini_installer.exe"
+				$LatestUrl = $host & "/" & $urlbase & "/" & $var & "/mini_installer.exe"
 				ExitLoop
 			EndIf
 			Sleep(200)
@@ -1625,11 +1627,10 @@ Func GetLatestVersion($Channel, $x86 = 0, $ProxySever = "", $ProxyPort = "")
 ;~ 			'<os platform="win" version="' & $WinVer & '" sp="' & @OSServicePack & '" arch="' & $OSArch & '"/>' & _
 ;~ 			'<app appid="{' & $appid & '}" ap="' & $ap & '"><updatecheck/></app></request>'
 
-	Local $arr[3] = ["https://tools.google.com", "https://tools.google.com", "https://clients2.google.com"]
-	For $i = 0 To UBound($arr) - 1
-		_SetVar("DLInfo", "|||||从服务器获取 Chrome 更新信息... 第 " & $i + 1 & " 次尝试")
-		$hConnect = _WinHttpConnect($hHTTPOpen, $arr[$i])
-
+	$host = "https://tools.google.com"
+	For $i = 1 To 3
+		_SetVar("DLInfo", "|||||从服务器获取 Chrome 更新信息... 第 " & 1 & " 次尝试")
+		$hConnect = _WinHttpConnect($hHTTPOpen, $host)
 		$var = _WinHttpSimpleSSLRequest($hConnect, "POST", "service/update2", Default, $data, "User-Agent: Google Update/1.3.23.9;winhttp")
 		_WinHttpCloseHandle($hConnect)
 		$match = StringRegExp($var, '(?i)<manifest +version="(.+?)".* name="(.+?)"', 1)
