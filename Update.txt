@@ -1,6 +1,6 @@
 ﻿latest=3.0.2
 url=http://code.taobao.org/p/mychrome/src/trunk/release/MyChrome_v3.0.2.zip?orig
-update=1. 没有代理软件也可更新浏览器：在设置界面中代理服务器选择“google.com”即可。\n2. 设置界面点击最新版本号可显示浏览器更新链接，可根据网络情况自主选择不同链接下载更新。
+update=1. 没有代理软件也可更新浏览器：在设置界面中代理服务器选择“google.com”即可。修正上一版本中，不能下载保存在国内非google服务器的更新文件的问题。\n2. 设置界面点击最新版本号可显示浏览器更新链接，可根据网络情况自主选择不同链接下载更新。
 latest_x64=3.0.2
 url_x64=http://code.taobao.org/p/mychrome/src/trunk/release/MyChrome_v3.0.2_x64.zip?orig
-update_x64=1. 没有代理软件也可更新浏览器：在设置界面中代理服务器选择“google.com”即可。\n2. 设置界面点击最新版本号可显示浏览器更新链接，可根据网络情况自主选择不同链接下载更新。
+update_x64=1. 没有代理软件也可更新浏览器：在设置界面中代理服务器选择“google.com”即可。修正上一版本中，不能下载保存在国内非google服务器的更新文件的问题。\n2. 设置界面点击最新版本号可显示浏览器更新链接，可根据网络情况自主选择不同链接下载更新。
