@@ -5,7 +5,7 @@
 #AutoIt3Wrapper_UseX64=y
 #AutoIt3Wrapper_Res_Comment=可自动更新的 Google Chrome 便携版
 #AutoIt3Wrapper_Res_Description=Google Chrome 便携版
-#AutoIt3Wrapper_Res_Fileversion=3.0.1.0
+#AutoIt3Wrapper_Res_Fileversion=3.0.2.0
 #AutoIt3Wrapper_Res_LegalCopyright=(C)甲壳虫<jdchenjian@gmail.com>
 #AutoIt3Wrapper_Res_Language=1033
 #AutoIt3Wrapper_AU3Check_Parameters=-q
@@ -45,7 +45,7 @@ Opt("TrayOnEventMode", 1)
 Opt("GUIOnEventMode", 1)
 Opt("WinTitleMatchMode", 4)
 
-Global Const $AppVersion = "3.0.1" ; MyChrome version
+Global Const $AppVersion = "3.0.2" ; MyChrome version
 Global $AppName, $inifile, $FirstRun = 0, $ChromePath, $ChromeDir, $ChromeExe, $UserDataDir, $Params
 Global $CacheDir, $CacheSize, $PortableParam
 Global $LastCheckUpdate, $UpdateInterval, $Channel, $IsUpdating = 0, $AskBeforeUpdateChrome, $x86 = 0
@@ -59,13 +59,13 @@ Global $aExApp, $aExApp2, $aExAppPID[2]
 Global $hSettings, $SettingsOK
 Global $hSettingsOK, $hSettingsApply, $hStausbar
 Global $hChromePath, $hGetChromePath, $hChromeSource, $hCheckUpdate
-Global $hChannel, $hx86, $hUpdateInterval, $hLatestChromeVer, $hCurrentVer, $hUserDataDir, $hCopyData
+Global $hChannel, $hx86, $hUpdateInterval, $hLatestChromeVer, $hCurrentVer, $hUserDataDir, $hCopyData, $hUrlList
 Global $hAutoUpdateApp, $hCacheDir, $hSelectCacheDir, $hCacheSize
 Global $hParams, $hDownloadThreads, $hEnableProxy, $hProxySever, $hProxyPort
 Global $hAskBeforeUpdateChrome
 Global $hRunInBackground, $hExApp, $hExAppAutoExit, $hExApp2
 
-Global $ChromeFileVersion, $ChromeLastChange, $LatestChromeVer, $LatestChromeUrls
+Global $ChromeFileVersion, $ChromeLastChange, $LatestChromeVer, $LatestChromeUrls, $SelectedUrl
 Global $DefaultChromeDir, $DefaultChromeVer, $DefaultUserDataDir
 Global $TrayTipProgress = 0
 Global $iThreadPid, $DownloadThreads
@@ -106,9 +106,9 @@ If Not FileExists($inifile) Then
 	IniWrite($inifile, "Settings", "LastCheckUpdate", "2014/05/01 00:00:00")
 	IniWrite($inifile, "Settings", "UpdateInterval", 24)
 	IniWrite($inifile, "Settings", "AskBeforeUpdateChrome", 1) ; 1 - 更新前询问
-	IniWrite($inifile, "Settings", "EnableUpdateProxy", 0)
-	IniWrite($inifile, "Settings", "UpdateProxy", "")
-	IniWrite($inifile, "Settings", "UpdatePort", "")
+	IniWrite($inifile, "Settings", "EnableUpdateProxy", 1)
+	IniWrite($inifile, "Settings", "UpdateProxy", "google.com")
+	IniWrite($inifile, "Settings", "UpdatePort", "80")
 	IniWrite($inifile, "Settings", "DownloadThreads", 3)
 	IniWrite($inifile, "Settings", "Params", "")
 	IniWrite($inifile, "Settings", "RunInBackground", 1)
@@ -614,24 +614,12 @@ Func CheckAppUpdate()
 	IniWrite($inifile, "Settings", "LastCheckAppUpdate", $LastCheckAppUpdate)
 
 	$var = BinaryToString(InetRead("http://code.taobao.org/p/mychrome/src/trunk/Update.txt?orig", 27), 4)
-	$var = StringStripWS($var, 3) ; 去掉开头、结尾的空字符
+	$var = StringStripWS($var, 3)
 	$match = StringRegExp($var, '(?im)^' & $slatest & '=(\S+)', 1)
-	If Not @error Then
-		$LatestAppVer = $match[0]
-	Else
-		If $EnableProxy Then
-			HttpSetProxy(2, $ProxySever & ":" & $ProxyPort)
-		Else
-			HttpSetProxy(0)
-		EndIf
-		$var = BinaryToString(InetRead("http://my-chrome.googlecode.com/svn/Update.txt", 27), 4) ; UTF-8
-		$var = StringStripWS($var, 3) ; 去掉开头、结尾的空字符
-		$match = StringRegExp($var, '(?im)^' & $slatest & '=(\S+)', 1)
-		If Not @error Then $LatestAppVer = $match[0]
-	EndIf
+	If @error Then Return
 
-	If Not $LatestAppVer Then Return
-	If Not VersionCompare($LatestAppVer, $AppVersion) Then Return
+	$LatestAppVer = $match[0]
+	If VersionCompare($LatestAppVer, $AppVersion) <= 0 Then Return
 	$match = StringRegExp($var, '(?im)^' & $surl & '=(\S+)', 1)
 	If @error Then Return
 	$url = $match[0]
@@ -1257,12 +1245,18 @@ EndFunc   ;==>OpenWebsite
 ;~ 显示下载地址
 Func ShowUrl()
 	If $LatestChromeUrls <> "" Then
-		Local $hGUI = GUICreate("MyChrome", 500, 240)
+		Local $hGUI = GUICreate("MyChrome", 500, 260)
 		GUISetOnEvent($GUI_EVENT_CLOSE, "ShowUrlExit")
-		GUICtrlCreateLabel("点击链接可复制到剪贴板", 10, 10)
-		GUICtrlCreateList("", 10, 40, 480, 200)
+		GUICtrlCreateLabel("选择链接可下载或复制到剪贴板", 10, 10)
+		$hUrlList = GUICtrlCreateList("", 10, 40, 480, 170, BitOR($WS_BORDER, $WS_VSCROLL))
 		GUICtrlSetData(-1, StringReplace($LatestChromeUrls, " ", "|"))
+		GUICtrlCreateButton("复制", 300, 220, 80, 20)
 		GUICtrlSetOnEvent(-1, "CopyUrl")
+		GUICtrlCreateButton("下载", 400, 220, 80, 20)
+		GUICtrlSetOnEvent(-1, "DownloadsUrl")
+		If $IsUpdating Then
+			GUICtrlSetState(-1, $GUI_DISABLE)
+		EndIf
 		GUISetState(@SW_SHOW, $hGUI)
 	EndIf
 EndFunc   ;==>ShowUrl
@@ -1270,12 +1264,17 @@ Func ShowUrlExit()
 	GUIDelete(@GUI_WinHandle)
 EndFunc   ;==>ShowUrlExit
 Func CopyUrl()
-	Local $url = GUICtrlRead(@GUI_CtrlId)
-	If $url <> "" Then
-		ClipPut($url)
-		MsgBox(64, "MyChrome", "下载地址已复制到剪贴板!", 0, @GUI_WinHandle)
-	EndIf
+	Local $url = GUICtrlRead($hUrlList)
+	If $url = "" Then Return
+	ClipPut($url)
+	MsgBox(64, "MyChrome", "下载地址已复制到剪贴板!", 0, @GUI_WinHandle)
 EndFunc   ;==>CopyUrl
+Func DownloadsUrl()
+	$SelectedUrl = GUICtrlRead($hUrlList)
+	If $SelectedUrl = "" Then Return
+	GUIDelete(@GUI_WinHandle)
+	Start_End_ChromeUpdate()
+EndFunc   ;==>DownloadsUrl
 
 Func GetChrome()
 	Local $source = GUICtrlRead($hChromeSource)
@@ -1364,15 +1363,20 @@ Func CheckChromeUpdate()
 	GUICtrlSetState($hSettingsOK, $GUI_DISABLE)
 	GUICtrlSetState($hSettingsApply, $GUI_DISABLE)
 
-	UpdateChrome($ChromePath, $Channel)
-
+	If $SelectedUrl Then
+		Local $surl = $SelectedUrl
+		$SelectedUrl = ""
+		UpdateChrome($ChromePath, $Channel, $surl)
+	Else
+		UpdateChrome($ChromePath, $Channel)
+	EndIf
 	If GUICtrlRead($hChromeSource) = "从网络下载" Then
 		_GUICtrlComboBox_SelectString($hChromeSource, "----  请选择  ----")
 	EndIf
 EndFunc   ;==>CheckChromeUpdate
 
 ;~ 更新浏览器
-Func UpdateChrome($ChromePath, $Channel)
+Func UpdateChrome($ChromePath, $Channel, $surl = "")
 	$ChromePath = FullPath($ChromePath)
 	SplitPath($ChromePath, $ChromeDir, $ChromeExe)
 	If ChromeIsUpdating($ChromeDir) Then
@@ -1453,95 +1457,92 @@ Func UpdateChrome($ChromePath, $Channel)
 	If Not IsHWnd($hSettings) And $AskBeforeUpdateChrome = 1 Then
 		$msg = MsgBox(68, 'MyChrome', $info)
 	EndIf
-
-	Local $restart = 1, $error, $errormsg, $updated, $url
-	If $msg = 6 Then ; Yes
-		If IsHWnd($hSettings) Then
-			_GUICtrlStatusBar_SetText($hStausbar, "尝试连接已获取的下载地址 ...")
-		EndIf
-		$url = GetValidUrl($LatestChromeUrls, $ProxySever, $ProxyPort)
-		If $url = "" Then
-			If IsHWnd($hSettings) Or $AskBeforeUpdateChrome Then
-				MsgBox(16, "更新错误-MyChrome", "已获取的 Google Chrome 下载地址无法连接！", 0, $hSettings)
-			EndIf
-		Else
-			$IsUpdating = $url
-			Local $localfile = $ChromeDir & "\~update\chrome_installer.exe"
-			If IsHWnd($hSettings) Then
-				_GUICtrlStatusBar_SetText($hStausbar, "下载 Google Chrome ...")
-			ElseIf Not @TrayIconVisible Then
-				TraySetState(1)
-				TraySetClick(8)
-				TraySetToolTip("MyChrome")
-				TraySetOnEvent($TRAY_EVENT_PRIMARYDOWN, "TrayTipProgress")
-				TrayCreateItem("取消更新 ...")
-				TrayItemSetOnEvent(-1, "CancelUpdate")
-				TrayTip("开始下载 Google Chrome", "点击图标可查看下载进度", 10, 1)
-			EndIf
-
-			Local $ResumeDownload = 0, $aDlInfo, $error, $errormsg
-			While 1
-				If Not $IsUpdating Then
-					ExitLoop ; 手动停止
-				EndIf
-
-				_SetVar("DLInfo", "|||||")
-				_SetVar("ResponseTimer", TimerInit())
-				If $ResumeDownload Then
-					_SetVar("ResumeDownload", 1)
-				Else
-					If $EnableProxy = 1 Then
-						$iThreadPid = _StartThread("DownloadChrome", $url, $localfile, $LatestChromeVer, $DownloadThreads, $ProxySever, $ProxyPort)
-					Else
-						$iThreadPid = _StartThread("DownloadChrome", $url, $localfile, $LatestChromeVer, $DownloadThreads)
-					EndIf
-				EndIf
-
-				While 1 ; 等待下载结束
-					$aDlInfo = StringSplit(_GetVar("DLInfo"), "|", 2)
-					If IsHWnd($hSettings) Then
-						_GUICtrlStatusBar_SetText($hStausbar, $aDlInfo[5])
-					ElseIf $TrayTipProgress Or TrayTipExists("下载 Google Chrome") Then
-						$aDlInfo[5] = StringReplace($aDlInfo[5], ": ", @CRLF)
-						TrayTip("", $aDlInfo[5], 10, 1)
-						$TrayTipProgress = 0
-					EndIf
-					If $aDlInfo[2] Then ExitLoop ; 任务完成
-					If Not ProcessExists($iThreadPid) Or TimerDiff(_GetVar("ResponseTimer")) > 60000 Then
-						ExitLoop ; 子进程结束或无响应
-					EndIf
-
-					If Not $IsUpdating Then ; 手动停止
-						ExitLoop 2
-					EndIf
-					Sleep(100)
-				WEnd
-
-				If $aDlInfo[2] And $aDlInfo[3] Then ; 下载成功
-					$updated = InstallChrome() ; 安装更新
-					ExitLoop
-				EndIf
-
-				$error = $aDlInfo[4]
-				If $error = 2 Then
-					$errormsg = "下载中断，文件未下载完整。"
-					$ResumeDownload = 1 ; 下载出错未完成，可续传
-				Else
-					$ResumeDownload = 0 ; 下载出错，不能续传
-					_KillThread($iThreadPid)
-					If $error = 1 Then
-						$errormsg = "无法连接更新服务器。"
-					ElseIf $error = 3 Then
-						$errormsg = "已下载的文件大小不正确。"
-					EndIf
-				EndIf
-				If Not IsHWnd($hSettings) And Not $AskBeforeUpdateChrome Then ExitLoop
-				$msg = MsgBox(16 + 5, "更新错误-MyChrome", "下载 Google Chrome 失败！" & @CRLF & $errormsg, 0, $hSettings)
-				If $msg <> 4 Then ExitLoop
-				Dim $aDlInfo[6]
-			WEnd
-		EndIf
+	If $msg <> 6 Then ; not YES
+		EndUpdate()
+		Return
 	EndIf
+
+	Local $restart = 1, $error, $errormsg, $updated, $urls
+	$IsUpdating = $LatestChromeUrls
+	Local $localfile = $ChromeDir & "\~update\chrome_installer.exe"
+	If IsHWnd($hSettings) Then
+		_GUICtrlStatusBar_SetText($hStausbar, "准备下载 Google Chrome ...")
+	ElseIf Not @TrayIconVisible Then
+		TraySetState(1)
+		TraySetClick(8)
+		TraySetToolTip("MyChrome")
+		TraySetOnEvent($TRAY_EVENT_PRIMARYDOWN, "TrayTipProgress")
+		TrayCreateItem("取消更新 ...")
+		TrayItemSetOnEvent(-1, "CancelUpdate")
+		TrayTip("开始下载 Google Chrome", "点击图标可查看下载进度", 10, 1)
+	EndIf
+
+	Local $ResumeDownload = 0, $aDlInfo, $error, $errormsg
+	If $surl Then
+		$urls = $surl
+	Else
+		$urls = $LatestChromeUrls
+	EndIf
+	While 1
+		If Not $IsUpdating Then
+			ExitLoop ; 手动停止
+		EndIf
+
+		_SetVar("DLInfo", "|||||")
+		_SetVar("ResponseTimer", TimerInit())
+		If $ResumeDownload Then
+			_SetVar("ResumeDownload", 1)
+		Else
+			If $EnableProxy = 1 Then
+				$iThreadPid = _StartThread("DownloadChrome", $urls, $localfile, $LatestChromeVer, $DownloadThreads, $ProxySever, $ProxyPort)
+			Else
+				$iThreadPid = _StartThread("DownloadChrome", $urls, $localfile, $LatestChromeVer, $DownloadThreads)
+			EndIf
+		EndIf
+
+		While 1 ; 等待下载结束
+			$aDlInfo = StringSplit(_GetVar("DLInfo"), "|", 2)
+			If IsHWnd($hSettings) Then
+				_GUICtrlStatusBar_SetText($hStausbar, $aDlInfo[5])
+			ElseIf $TrayTipProgress Or TrayTipExists("下载 Google Chrome") Then
+				$aDlInfo[5] = StringReplace($aDlInfo[5], ": ", @CRLF)
+				TrayTip("", $aDlInfo[5], 10, 1)
+				$TrayTipProgress = 0
+			EndIf
+			If $aDlInfo[2] Then ExitLoop ; 任务完成
+			If Not ProcessExists($iThreadPid) Or TimerDiff(_GetVar("ResponseTimer")) > 60000 Then
+				ExitLoop ; 子进程结束或无响应
+			EndIf
+
+			If Not $IsUpdating Then ; 手动停止
+				ExitLoop 2
+			EndIf
+			Sleep(100)
+		WEnd
+
+		If $aDlInfo[2] And $aDlInfo[3] Then ; 下载成功
+			$updated = InstallChrome() ; 安装更新
+			ExitLoop
+		EndIf
+
+		$error = $aDlInfo[4]
+		If $error = 2 Then
+			$errormsg = "下载中断，文件未下载完整。"
+			$ResumeDownload = 1 ; 下载出错未完成，可续传
+		Else
+			$ResumeDownload = 0 ; 下载出错，不能续传
+			_KillThread($iThreadPid)
+			If $error = 1 Then
+				$errormsg = "无法连接更新文件服务器。"
+			ElseIf $error = 3 Then
+				$errormsg = "已下载的文件大小不正确。"
+			EndIf
+		EndIf
+		If Not IsHWnd($hSettings) And Not $AskBeforeUpdateChrome Then ExitLoop
+		$msg = MsgBox(16 + 5, "更新错误-MyChrome", "下载 Google Chrome 失败！" & @CRLF & $errormsg, 0, $hSettings)
+		If $msg <> 4 Then ExitLoop
+		Dim $aDlInfo[6]
+	WEnd
 
 	If @TrayIconVisible Then
 		TraySetState(2)
@@ -1557,7 +1558,7 @@ Func CancelUpdate()
 	EndIf
 EndFunc   ;==>CancelUpdate
 
-#Region 获取 Chrome 更新信息（最新版本号，下载地址）
+#Region get Chrome update info (latest version, urls）
 ;~ $aDlInfo[6]
 ;~ 0 - Latest Chrome Version
 ;~ 1 - Latest Chrome url
@@ -1575,10 +1576,15 @@ Func GetLatestVersion($Channel, $x86 = 0, $ProxySever = "", $ProxyPort = "")
 	AdlibRegister("ResetTimer", 1000) ; 定时向父进程发送时间信息（响应信息）
 
 	Local $hHTTPOpen, $hConnect, $version, $name, $a, $hRequest, $sHeader, $error
-	If $ProxySever = "google.com" And $ProxyPort <> "" Then
+	If $ProxySever = "" Or $ProxyPort = "" Then
+		$hHTTPOpen = _WinHttpOpen()
+	ElseIf $ProxySever = "google.com" Then
 		$http = "http"
+		_SetVar("DLInfo", "|||||查找 Google 可用 IP ...")
+		$hHTTPOpen = _WinHttpOpen(Default, $WINHTTP_ACCESS_TYPE_NAMED_PROXY, GetGoogleIP() & ":" & $ProxyPort, "localhost")
+	Else
+		$hHTTPOpen = _WinHttpOpen(Default, $WINHTTP_ACCESS_TYPE_NAMED_PROXY, $ProxySever & ":" & $ProxyPort, "localhost")
 	EndIf
-	$hHTTPOpen = HttpOpen($ProxySever, $ProxyPort)
 	_WinHttpSetTimeouts($hHTTPOpen, 0, 3000, 3000, 3000) ; 设置超时
 
 	; get latest Chromium developer build
@@ -1598,7 +1604,7 @@ Func GetLatestVersion($Channel, $x86 = 0, $ProxySever = "", $ProxyPort = "")
 		For $i = 1 To 3
 			_SetVar("DLInfo", "|||||从服务器获取 Chromium 更新信息... 第 " & $i & " 次尝试")
 			$hConnect = _WinHttpConnect($hHTTPOpen, $host)
-			If $ProxySever = "google.com" Then
+			If $ProxyPort = 80 Then
 				$var = _WinHttpSimpleRequest($hConnect, "GET", $urlbase & "/LAST_CHANGE")
 			Else
 				$var = _WinHttpSimpleSSLRequest($hConnect, "GET", $urlbase & "/LAST_CHANGE")
@@ -1667,11 +1673,10 @@ Func GetLatestVersion($Channel, $x86 = 0, $ProxySever = "", $ProxyPort = "")
 			'<os platform="win" version="' & $WinVer & '" sp="' & @OSServicePack & '" arch="' & $OSArch & '"/>' & _
 			'<app appid="{' & $appid & '}" version="" nextversion="" ap="' & $ap & '"><updatecheck/></app></request>'
 
-	$host = $http & "://tools.google.com"
 	For $i = 1 To 3
 		_SetVar("DLInfo", "|||||从服务器获取 Chrome 更新信息... 第 " & 1 & " 次尝试")
-		$hConnect = _WinHttpConnect($hHTTPOpen, $host)
-		If $ProxySever = "google.com" Then
+		$hConnect = _WinHttpConnect($hHTTPOpen, "https://tools.google.com")
+		If $ProxyPort = 80 Then
 			$var = _WinHttpSimpleRequest($hConnect, "POST", "service/update2", Default, $data, "User-Agent: Google Update/1.3.23.9;winhttp")
 		Else
 			$var = _WinHttpSimpleSSLRequest($hConnect, "POST", "service/update2", Default, $data, "User-Agent: Google Update/1.3.23.9;winhttp")
@@ -1705,71 +1710,26 @@ EndFunc   ;==>GetLatestVersion
 Func ResetTimer() ; 定时向父进程发送时间信息，告诉父进程：我还活着！
 	_SetVar("ResponseTimer", TimerInit())
 EndFunc   ;==>ResetTimer
-#EndRegion 获取 Chrome 更新信息（最新版本号，下载地址）
-
-Func GetValidUrl($urls, $pServer, $pPort)
-	Local $i, $a, $hOpen, $hConnect, $hRequest, $sHeader, $ValidUrl
-	Local $aUrl = StringSplit($urls, " ")
-	$hOpen = HttpOpen($pServer, $pPort)
-	_WinHttpSetTimeouts($hOpen, 0, 3000, 3000, 3000)
-	For $i = 1 To $aUrl[0]
-		$a = HttpParseUrl($aUrl[$i])
-		$hConnect = _WinHttpConnect($hOpen, $a[0], $a[2])
-		If $a[2] = 443 Then
-			$hRequest = _WinHttpOpenRequest($hConnect, "GET", $a[1], Default, Default, Default, _
-					BitOR($WINHTTP_FLAG_SECURE, $WINHTTP_FLAG_ESCAPE_DISABLE))
-		Else
-			$hRequest = _WinHttpOpenRequest($hConnect, "GET", $a[1])
-		EndIf
-		_WinHttpSendRequest($hRequest)
-		_WinHttpReceiveResponse($hRequest)
-		$sHeader = _WinHttpQueryHeaders($hRequest, $WINHTTP_QUERY_STATUS_CODE)
-		_WinHttpCloseHandle($hRequest)
-		_WinHttpCloseHandle($hConnect)
-		If $sHeader = 200 Then
-			$ValidUrl = $aUrl[$i]
-			ExitLoop
-		EndIf
-	Next
-	_WinHttpCloseHandle($hOpen)
-	Return $ValidUrl
-EndFunc   ;==>GetValidUrl
-
-Func HttpOpen($pServer, $pPort)
-	Local $GoogleIP, $hOpen
-	If $pServer <> "" And $pPort <> "" Then
-		If $pServer = "google.com" Then
-			$GoogleIP = GetGoogleIP()
-		EndIf
-		If $GoogleIP Then
-			$hOpen = _WinHttpOpen(Default, $WINHTTP_ACCESS_TYPE_NAMED_PROXY, $GoogleIP & ":" & $pPort, "localhost")
-		Else
-			$hOpen = _WinHttpOpen(Default, $WINHTTP_ACCESS_TYPE_NAMED_PROXY, $pServer & ":" & $pPort, "localhost")
-		EndIf
-	Else
-		$hOpen = _WinHttpOpen() ; 无代理
-	EndIf
-	Return $hOpen
-EndFunc   ;==>HttpOpen
+#EndRegion get Chrome update info (latest version, urls）
 
 #Region DownloadChrome
 ; #FUNCTION# ;===============================================================================
 ; Name...........: DownloadChrome
 ; Description ...: 下载 chrome
 ; Syntax.........: DownloadChrome($url, $localfile, $version = "", $DownloadThreads = 3, $ProxySever = "", $ProxyPort = "")
-; Parameters ....: $url - 网址，如："http://dl.google.com/chrome/install/912.12/chrome_installer.exe"
-;                  $localfile - 本地文件名
-;                  $version - chrome 最新版本号
-;                  $DownloadThreads - 下载线程数
-;                  $ProxySever - 代理服务器
-;                  $ProxyPort - 代理服务器端口
-;                  _SetVar("ResumeDownload", 1) - 0 - 重新下载，1 - 断点续传
+; Parameters ....: $url - space separated urls
+;                  $localfile - local file path
+;                  $version - chrome latest version
+;                  $DownloadThreads - download threads
+;                  $ProxySever - proxy sever for update
+;                  $ProxyPort - proxy port for update
+;                  _SetVar("ResumeDownload", 1) - 0 - re-download totally，1 - resume download
 ; Return values .: Success - @error = 0, @extended = ""
 ;                  Failure - @error = 1: 连接服务器失败，不能续传
 ;                            @error = 2:下载出错，可以续传
 ;                            @error = 3:下载的文件不正确，不能续传
 ;============================================================================================
-Func DownloadChrome($url, $localfile, $version = "", $DownloadThreads = 3, $ProxySever = "", $ProxyPort = "")
+Func DownloadChrome($urls, $localfile, $version = "", $DownloadThreads = 3, $ProxySever = "", $ProxyPort = "")
 	Local $DownLoadInfo
 	; Dim $DownLoadInfo[1][5]
 ;~ [n, 0] - bytes from
@@ -1778,44 +1738,80 @@ Func DownloadChrome($url, $localfile, $version = "", $DownloadThreads = 3, $Prox
 ;~ [n, 3] - $hHttpRequest, special falg: 0 - error, -1 - complete
 ;~ [n, 4] - $hHttpConnect
 
-	Local $TempDir = StringMid($localfile, 1, StringInStr($localfile, "\", 0, -1) - 1)
-	If Not FileExists($TempDir) Then DirCreate($TempDir)
-	If FileExists($localfile) Then FileDelete($localfile)
-	Local $hDlFile = FileOpen($localfile, 25)
-
-	_SetVar("DLInfo", "|||||准备下载 Google Chrome ...")
 	AdlibRegister("ResetTimer", 1000) ; 定时向父进程发送时间信息（响应信息）
-
-	Local $hHTTPOpen, $ret, $error, $GoogleIP
-	$hHTTPOpen = HttpOpen($ProxySever, $ProxyPort)
-	_WinHttpSetTimeouts($hHTTPOpen, 0, 10000, 10000, 10000) ; 设置超时
-	While 1
-		$ret = __DownloadChrome($url, $localfile, $hDlFile, $version, $DownloadThreads, $hHTTPOpen, $DownLoadInfo)
-		$error = @error
-		_SetVar("DLInfo", $ret)
-
-		For $i = 0 To UBound($DownLoadInfo) - 1
-			If Not $DownLoadInfo[$i][3] Or $DownLoadInfo[$i][3] = -1 Then ContinueLoop
-			_WinHttpCloseHandle($DownLoadInfo[$i][3])
-			_WinHttpCloseHandle($DownLoadInfo[$i][4])
-		Next
-
-		If $error <> 2 Then ExitLoop
-		While 1
-			Sleep(100)
-			If _GetVar("ResumeDownload") = 1 Then
-				_SetVar("ResumeDownload", 0)
-				ExitLoop 1
-			EndIf
-			If Not WinExists($__hwnd_vars) Then ExitLoop 2
-		WEnd
-	WEnd
-
-	_WinHttpCloseHandle($hHTTPOpen)
-	FileClose($hDlFile)
-	If Not WinExists($__hwnd_vars) Then
-		DirRemove($TempDir, 1) ; remove if father process is dead
+	Local $hHTTPOpen, $ret, $error
+	If $ProxySever = "google.com" Or $ProxySever = "" Or $ProxyPort = "" Then ; try direct download first if google.com set as proxy
+		$hHTTPOpen = _WinHttpOpen()
+	Else
+		$hHTTPOpen = _WinHttpOpen(Default, $WINHTTP_ACCESS_TYPE_NAMED_PROXY, $ProxySever & ":" & $ProxyPort, "localhost")
 	EndIf
+	_WinHttpSetTimeouts($hHTTPOpen, 0, 5000, 5000, 5000) ; 设置超时
+
+
+	; get valid url
+	Local $i, $j, $a, $hConnect, $hRequest, $sHeader, $url
+	Local $aUrl = StringSplit($urls, " ")
+	For $j = 1 To 2
+		For $i = 1 To $aUrl[0]
+			_SetVar("DLInfo", "|||||尝试连接 " & $aUrl[$i])
+			$a = HttpParseUrl($aUrl[$i])
+			$hConnect = _WinHttpConnect($hHTTPOpen, $a[0], $a[2])
+			If $a[2] = 443 And $ProxySever <> "google.com" Then
+				$hRequest = _WinHttpOpenRequest($hConnect, "GET", $a[1], Default, Default, Default, _
+						BitOR($WINHTTP_FLAG_SECURE, $WINHTTP_FLAG_ESCAPE_DISABLE))
+			Else
+				$hRequest = _WinHttpOpenRequest($hConnect, "GET", $a[1])
+			EndIf
+			_WinHttpSendRequest($hRequest)
+			_WinHttpReceiveResponse($hRequest)
+			$sHeader = _WinHttpQueryHeaders($hRequest, $WINHTTP_QUERY_STATUS_CODE)
+			_WinHttpCloseHandle($hRequest)
+			_WinHttpCloseHandle($hConnect)
+			If $sHeader = 200 Then
+				$url = $aUrl[$i]
+				ExitLoop 2
+			EndIf
+		Next
+		If $ProxySever = "google.com" Then
+			_WinHttpCloseHandle($hHTTPOpen)
+			_SetVar("DLInfo", "|||||查找 Google 可用 IP ...")
+			$hHTTPOpen = _WinHttpOpen(Default, $WINHTTP_ACCESS_TYPE_NAMED_PROXY, GetGoogleIP() & ":" & $ProxyPort, "localhost")
+		EndIf
+	Next
+
+	If Not $url Then
+		_WinHttpCloseHandle($hHTTPOpen)
+		Return SetError(1, 0, "||1||1|连接更新文件服务器失败") ; 无法连接服务器
+	Else
+		Local $TempDir = StringMid($localfile, 1, StringInStr($localfile, "\", 0, -1) - 1)
+		If Not FileExists($TempDir) Then DirCreate($TempDir)
+		If FileExists($localfile) Then FileDelete($localfile)
+		Local $hDlFile = FileOpen($localfile, 25)
+		While 1
+			$ret = __DownloadChrome($url, $localfile, $hDlFile, $version, $DownloadThreads, $hHTTPOpen, $DownLoadInfo)
+			$error = @error
+			_SetVar("DLInfo", $ret)
+			For $i = 0 To UBound($DownLoadInfo) - 1
+				If Not $DownLoadInfo[$i][3] Or $DownLoadInfo[$i][3] = -1 Then ContinueLoop
+				_WinHttpCloseHandle($DownLoadInfo[$i][3])
+				_WinHttpCloseHandle($DownLoadInfo[$i][4])
+			Next
+			If $error <> 2 Then ExitLoop
+			While 1
+				Sleep(100)
+				If _GetVar("ResumeDownload") = 1 Then
+					_SetVar("ResumeDownload", 0)
+					ExitLoop 1
+				EndIf
+				If Not WinExists($__hwnd_vars) Then ExitLoop 2
+			WEnd
+		WEnd
+		FileClose($hDlFile)
+		If Not WinExists($__hwnd_vars) Then
+			DirRemove($TempDir, 1) ; remove if father process is dead
+		EndIf
+	EndIf
+	_WinHttpCloseHandle($hHTTPOpen)
 EndFunc   ;==>DownloadChrome
 Func __DownloadChrome($url, $localfile, $hDlFile, $version, $DownloadThreads, $hHTTPOpen, ByRef $DownLoadInfo)
 	Local $i, $header, $remotesize, $aThread, $match
@@ -1841,7 +1837,7 @@ Func __DownloadChrome($url, $localfile, $hDlFile, $version, $DownloadThreads, $h
 		Next
 
 		If Not $aThread[0] Or $header = "" Then
-			Return SetError(1, 0, "||1||1|连接更新服务器失败") ; 无法连接服务器
+			Return SetError(1, 0, "||1||1|连接更新文件服务器失败") ; 无法连接服务器
 		EndIf
 		If StringRegExp($header, '(?is)^HTTP/[\d\.]+ +200 ') Then ; 不支持断点续传
 			Dim $DownLoadInfo[1][5] = [[0, 0, 0]]
@@ -2785,63 +2781,136 @@ Func _IsUACAdmin()
 	EndIf
 EndFunc   ;==>_IsUACAdmin
 
+; Return $v1 - $v1
 Func VersionCompare($v1, $v2)
-	Local $i, $c1, $c2, $a1, $a2
-	StringReplace($v1, ".", ".")
-	$c1 = @extended
-	StringReplace($v2, ".", ".")
-	$c2 = @extended
-	If $c1 > $c2 Then
-		For $i = 1 To $c1 - $c2
-			$v2 &= ".0"
-		Next
+	Local $i, $a1, $a2, $ret = 0
+	$a1 = StringSplit($v1, ".", 2)
+	$a2 = StringSplit($v2, ".", 2)
+	If UBound($a1) > UBound($a2) Then
+		ReDim $a2[UBound($a1)]
 	Else
-		For $i = 1 To $c2 - $c1
-			$v1 &= ".0"
-		Next
+		ReDim $a1[UBound($a2)]
 	EndIf
-	$a1 = StringSplit($v1, ".")
-	$a2 = StringSplit($v2, ".")
-	For $i = 1 To $a1[0]
-		If $a1[$i] * 1 <> $a2[$i] * 1 Then
-			Return $a1[$i] - $a2[$i] > 0
-		EndIf
+	For $i = 0 To UBound($a1) - 1
+		$ret = $a1[$i] - $a2[$i]
+		If $ret <> 0 Then ExitLoop
 	Next
-	Return False
+	Return $ret
 EndFunc   ;==>VersionCompare
 
 Func GetGoogleIP()
-	Local $var, $match, $i, $TryCnt, $hHTTPOpen, $hConnect, $hRequest, $sHeader, $IP
-	$var = BinaryToString(InetRead("http://www.xiexingwen.com/google/test_splus.php?query=*", 27), 4)
-	$match = StringRegExp($var, '(?is)var +hs\s*=\s*\[\s*([\d\." ,]+)\s*\]', 1)
-	If Not @error Then
-		$match = StringRegExp($match[0], '"(\d+\.\d+\.\d+\.\d+)"', 3)
-		$hHTTPOpen = _WinHttpOpen()
-		_WinHttpSetTimeouts($hHTTPOpen, 0, 3000, 3000, 3000) ; 设置超时
-		$TryCnt = 2
-		If UBound($match) < 3 Then
-			$TryCnt = UBound($match) - 1
-		EndIf
-		; only try up to 3 ips
-		For $i = 0 To $TryCnt
-			$hConnect = _WinHttpConnect($hHTTPOpen, $match[$i], 80)
-			$hRequest = _WinHttpOpenRequest($hConnect)
-			_WinHttpSendRequest($hRequest)
-			_WinHttpReceiveResponse($hRequest)
-			$sHeader = _WinHttpQueryHeaders($hRequest, $WINHTTP_QUERY_STATUS_CODE)
-			_WinHttpCloseHandle($hRequest)
-			_WinHttpCloseHandle($hConnect)
-			If $sHeader = 200 Then
-				$IP = $match[$i]
-				ExitLoop
-			EndIf
-		Next
-		_WinHttpCloseHandle($hHTTPOpen)
+	Local $var, $match, $GIP, $IP
+	Local $hOpen, $hConnect, $hRequest
+	Local $inifile, $GIP, $GIPSource, $gs, $ss, $i
+	$inifile = StringLeft(@ScriptFullPath, StringInStr(@ScriptFullPath, ".", 0, -1) - 1) & ".ini"
+	$GIP = BinaryToString(IniRead($inifile, "Settings", "GIP", ""))
+	If $GIP <> "" Then
+		Local $aIP[1] = [$GIP]
+		$IP = GetValidIP($aIP)
+		If $IP Then Return $IP
 	EndIf
+	$GIPSource = IniRead($inifile, "Settings", "GIPSource", "")
+	$gs = $GIPSource
+	$ss = "1234"
+	If $gs = "" Then $gs = 1
+	$hOpen = _WinHttpOpen()
+	_WinHttpSetTimeouts($hOpen, 0, 3000, 3000, 3000)
+	While 1
+		Switch $gs
+			Case 1 ; http://www.xiexingwen.com/
+				$var = InetReadData($hOpen, "xiexingwen.com", 80, "/google/test_splus.php?query=*", 1024)
+				$match = StringRegExp($var, '(?is)var +hs\s*=\s*\[\s*([\d\." ,]+)\s*\]', 1)
+				If Not @error Then
+					$match = StringRegExp($match[0], '"(\d+\.\d+\.\d+\.\d+)"', 3)
+					If Not @error Then
+						$IP = GetValidIP($match)
+					EndIf
+				EndIf
+			Case 2 ; https://github.com/txthinking/google-hosts
+				$var = InetReadData($hOpen, "raw.githubusercontent.com", 443, "/txthinking/google-hosts/master/hosts", 512)
+				$match = StringRegExp($var, '(?im)^(\d+\.\d+\.\d+\.\d+) +.*\.google', 3)
+				If Not @error Then
+					$var = ""
+					For $i = 0 To UBound($match) - 1
+						If Not StringInStr($var, $match[$i]) Then
+							$var &= " " & $match[$i]
+						EndIf
+					Next
+					$var = StringStripWS($var, 7)
+					$IP = GetValidIP(StringSplit($var, " ", 2))
+				EndIf
+			Case 3 ; https://github.com/XX-net
+				$var = InetReadData($hOpen, "raw.githubusercontent.com", 443, "/XX-net/XX-Net/master/data/goagent/good_ip.txt", 512)
+				$match = StringRegExp($var, '(?im)^(\d+\.\d+\.\d+\.\d+) +.*\.google', 3)
+				If Not @error Then
+					$var = ""
+					For $i = 0 To UBound($match) - 1
+						If Not StringInStr($var, $match[$i]) Then
+							$var &= " " & $match[$i]
+						EndIf
+					Next
+					$var = StringStripWS($var, 7)
+					$IP = GetValidIP(StringSplit($var, " ", 2))
+				EndIf
+			Case 4 ; http://anotherhome.net/easygoagent/proxy.ini
+				$var = InetReadData($hOpen, "anotherhome.net", 80, "/easygoagent/proxy.ini", 4 * 1024)
+				$match = StringRegExp($var, '(?i)google_hk\s*=\s*([\d\.\|]+)', 1) ; google_hk = 216.58.220.71|216.58.220.27|64.233.189.197
+				If Not @error Then
+					$IP = GetValidIP(StringSplit($match[0], "|", 2))
+				EndIf
+		EndSwitch
+		If $IP Then ExitLoop
+		$ss = StringReplace($ss, $gs, "")
+		$gs = StringLeft($ss, 1)
+		If $gs = "" Then ExitLoop
+	WEnd
 	If Not $IP Then
-		TCPStartup()
-		$IP = TCPNameToIP("google.com")
-		TCPShutdown()
+		$IP = TCPNameToIP("google.cn")
 	EndIf
+	If $IP <> $GIP Then
+		IniWrite($inifile, "Settings", "GIP", StringToBinary($IP))
+	EndIf
+	If $gs <> $GIPSource Then
+		IniWrite($inifile, "Settings", "GIPSource", $gs)
+	EndIf
+	_WinHttpCloseHandle($hOpen)
 	Return $IP
 EndFunc   ;==>GetGoogleIP
+Func InetReadData($hOpen, $host, $port, $page, $bytes)
+	Local $hConnect, $hRequest, $var
+	$hConnect = _WinHttpConnect($hOpen, $host, $port)
+	If $port = 443 Then
+		$hRequest = _WinHttpSimpleSendSSLRequest($hConnect, "GET", $page)
+	Else
+		$hRequest = _WinHttpSimpleSendRequest($hConnect, "GET", $page)
+	EndIf
+	_WinHttpReceiveResponse($hRequest)
+	$var = _WinHttpReadData($hRequest, 1, $bytes)
+	_WinHttpCloseHandle($hRequest)
+	_WinHttpCloseHandle($hConnect)
+	Return $var
+EndFunc   ;==>InetReadData
+Func GetValidIP($aIP)
+	Local $hConnect, $sHeader, $IP, $TryCnt, $i
+	$TryCnt = 5 ; try up to 5 ips
+	If UBound($aIP) < $TryCnt Then
+		$TryCnt = UBound($aIP)
+	EndIf
+	TCPStartup()
+	AutoItSetOption("TCPTimeout", 2000)
+	For $i = 0 To $TryCnt - 1
+		$sHeader = "GET / HTTP/1.1" & @CRLF & _
+				"Host: " & $aIP[$i] & @CRLF & _
+				"Connection: close" & @CRLF & @CRLF
+		$hConnect = TCPConnect($aIP[$i], 80)
+		TCPSend($hConnect, $sHeader)
+		$sHeader = TCPRecv($hConnect, 32)
+		TCPCloseSocket($hConnect)
+		If StringRegExp($sHeader, '(?i)HTTP/\d+\.\d+ +200 +OK', 0) Then
+			$IP = $aIP[$i]
+			ExitLoop
+		EndIf
+	Next
+	TCPShutdown()
+	Return $IP
+EndFunc   ;==>GetValidIP
