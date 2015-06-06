@@ -9,10 +9,9 @@ if len(sys.argv) == 1:
 py2exe_options = {
     #'includes': ['encodings'],
     #'excludes': [],
-    #'dll_excludes': ['USER32.dll', 'IMM32.dll'],
     'compressed': 1,
     'optimize': 2,
-    'bundle_files': 0 # 0,1,2,3
+    'bundle_files': 1 # 0,1,2,3
 }
 
 setup(
@@ -21,7 +20,7 @@ setup(
         #'dest_base': 'inet',
         'product_name': 'inet',
         'icon_resources': [(0, 'inet.ico'),],
-        'version': '3.1.3',
+        'version': '3.1.4',
         'description': 'MyChrome Internet Module',
         'copyright': u'甲壳虫<jdchenjian@gmail.com>'
     }],

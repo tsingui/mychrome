@@ -4,8 +4,8 @@
 #AutoIt3Wrapper_Compile_Both=y
 #AutoIt3Wrapper_UseX64=y
 #AutoIt3Wrapper_Res_Comment=可自动更新的 Google Chrome 便携版
-#AutoIt3Wrapper_Res_Description=Google Chrome portable
-#AutoIt3Wrapper_Res_Fileversion=3.1.3.0
+#AutoIt3Wrapper_Res_Description=Google Chrome Portable
+#AutoIt3Wrapper_Res_Fileversion=3.1.4.0
 #AutoIt3Wrapper_Res_LegalCopyright=甲壳虫<jdchenjian@gmail.com>
 #AutoIt3Wrapper_Res_Language=1033
 #AutoIt3Wrapper_AU3Check_Parameters=-q
@@ -45,7 +45,7 @@ Opt("TrayOnEventMode", 1)
 Opt("GUIOnEventMode", 1)
 Opt("WinTitleMatchMode", 4)
 
-Global Const $AppVersion = "3.1.3" ; MyChrome version
+Global Const $AppVersion = "3.1.4" ; MyChrome version
 Global $AppName, $inifile, $FirstRun = 0, $ChromePath, $ChromeDir, $ChromeExe, $UserDataDir, $Params
 Global $CacheDir, $CacheSize, $PortableParam
 Global $LastCheckUpdate, $UpdateInterval, $Channel, $IsUpdating = 0, $x86 = 0
