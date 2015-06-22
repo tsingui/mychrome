@@ -8,7 +8,7 @@ update_x64=1. 增加对SOCKS4、SOCK5代理的支持。\n2. 修正最近新版Ch
 
 inet_latest=3.2
 inet_url=http://code.taobao.org/svn/mychrome/trunk/release/inet.7z
-inet_update=插件更新测试(x86) ......
+inet_update=IP失效时尝试从第三方网站获取Google可用IP。
 inet_latest_x64=3.2
 inet_url_x64=http://code.taobao.org/svn/mychrome/trunk/release/inet.7z
-inet_update_x64=插件更新测试(x64) ......
+inet_update_x64=IP失效时尝试从第三方网站获取Google可用IP。
