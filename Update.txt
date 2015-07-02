@@ -1,10 +1,10 @@
 ﻿
-latest=3.1.4
-url=http://code.taobao.org/svn/mychrome/trunk/release/MyChrome_v3.1.4.7z
-update=1. 增加对SOCKS4、SOCK5代理的支持。\n2. 修正最近新版Chrome重装系统或复制到其它电脑运行丢失扩展的问题。\n3. 增加自主查找google系IP的功能，MyChrome中设代理服务器为google.com，且勾选“恢复浏览器部分google服务”，不使用代理软件也可在浏览器中访问部分google服务。
-latest_x64=3.1.4
-url_x64=http://code.taobao.org/svn/mychrome/trunk/release/MyChrome_v3.1.4_x64.7z
-update_x64=1. 增加对SOCKS4、SOCK5代理的支持。\n2. 修正最近新版Chrome重装系统或复制到其它电脑运行丢失扩展的问题。\n3. 增加自主查找google系IP的功能，MyChrome中设代理服务器为google.com，且勾选“恢复浏览器部分google服务”，不使用代理软件也可在浏览器中访问部分google服务。
+latest=3.2.1
+url=http://code.taobao.org/svn/mychrome/trunk/release/MyChrome_v3.2.1.7z
+update=1. 去掉网络扩展 inet.exe，减小软件体积（压缩包700K左右）。\n2. inet.exe以插件方式提供：如需SOCKS代理支持或查找IP用于浏览器访问部分google服务，可在设置界面中勾选“启用网络增强插件”自动下载插件。若不想用插件，取消勾选或直接删除inet.exe、MSVCR100.dll这两个文件。
+latest_x64=3.2.1
+url_x64=http://code.taobao.org/svn/mychrome/trunk/release/MyChrome_v3.2.1_x64.7z
+update_x64=1. 去掉网络扩展 inet.exe，减小软件体积（压缩包700K左右）。\n2. inet.exe以插件方式提供：如需SOCKS代理支持或查找IP用于浏览器访问部分google服务，可在设置界面中勾选“启用网络增强插件”自动下载插件。若不想用插件，取消勾选或直接删除inet.exe、MSVCR100.dll这两个文件。
 
 inet_latest=3.2
 inet_url=http://code.taobao.org/svn/mychrome/trunk/release/inet.7z

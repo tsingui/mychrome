@@ -20,7 +20,7 @@ setup(
         #'dest_base': 'inet',
         'product_name': 'inet',
         'icon_resources': [(0, 'inet.ico'),],
-        'version': '3.1.4',
+        'version': '3.2',
         'description': 'MyChrome Internet Module',
         'copyright': u'甲壳虫<jdchenjian@gmail.com>'
     }],

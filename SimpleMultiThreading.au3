@@ -28,15 +28,22 @@ Func _StartThread($exe, $function, $p1 = "", $p2 = "", $p3 = "", $p4 = "", $p5 =
 	Next
 	$para = StringStripWS($para, 3)
 
-	If FileExists($exe) Then
+	If $exe == @ScriptFullPath Or $exe == @ScriptName Then
+		If @Compiled Then
+			Return Run('"' & @AutoItExe & '" child_thread_by ' & $__hwnd_vars & ' ' & $function & ' ' & $para)
+		Else
+			Return Run('"' & @AutoItExe & '" "' & @ScriptFullPath & '" child_thread_by ' & $__hwnd_vars & ' ' & $function & ' ' & $para)
+		EndIf
+	ElseIf FileExists($exe) Then
 		Return ShellExecute($exe, ' child_thread_by ' & $__hwnd_vars & ' ' & $function & ' ' & $para, "", "open", @SW_HIDE)
 	EndIf
-;~ 	Return Run($exe & ' child_thread_by ' & $__hwnd_vars & ' ' & $function & ' ' & $para, "", @SW_HIDE)
 EndFunc
 
 Func _KillThread($thread)
-	Run(@ComSpec & ' /c taskkill /PID ' & $thread & ' /T /F', '', @SW_HIDE)
-	Return SetError(Not ProcessExists($thread))
+	If $thread And ProcessExists($thread) Then
+		Run(@ComSpec & ' /c taskkill /PID ' & $thread & ' /T /F', '', @SW_HIDE)
+		Return SetError(Not ProcessExists($thread))
+	EndIf
 EndFunc
 
 Func _SetVar($var, $it = "")

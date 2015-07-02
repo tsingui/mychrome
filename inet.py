@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+# inet.py 3.2
 # -*- coding: cp936 -*-
 
 import random, os, sys, time
@@ -33,139 +33,219 @@ dns_servers = '''\
 8.8.4.4
 208.67.222.222
 208.67.220.220
-212.200.81.1
-101.255.16.226
-212.181.124.8
-190.128.242.206
-213.154.81.99
-109.236.123.130
-82.209.18.102
-37.75.163.227
-201.227.172.226
-219.86.166.31
-187.115.128.64
-120.146.195.117
-177.38.203.54
-200.88.127.22
-89.18.199.70
-87.249.4.10
-114.130.11.66
-108.47.214.11
-94.255.122.42
-212.181.116.234
 80.71.54.18
-78.29.14.127
-68.198.35.79
-193.238.223.91
-187.115.128.64
-212.75.211.2
-195.177.122.222
-91.122.208.159
-200.88.127.22
-83.142.9.30
-95.66.182.191
-82.114.92.226
-62.38.107.152
-82.209.18.102
-188.235.4.55
-212.200.81.1
-178.168.19.55
-201.227.172.226
-24.42.48.51
-89.18.199.70
-202.29.94.172
-177.38.203.54
-82.153.92.178
-200.49.160.35
-94.255.122.42
-216.143.135.11
-63.238.52.1
-190.128.242.206
-211.224.66.119
-85.204.57.156
-37.75.163.227
-221.163.86.113
-210.210.219.62
-212.25.44.52
 220.87.177.141
-96.231.165.226
-121.163.48.231
-82.102.93.139
-94.230.183.229
-222.99.144.128
-185.6.126.66
-41.77.130.138
-103.29.30.187
-108.47.214.11
-77.252.83.83
-199.103.16.5
-118.35.78.70
-61.93.207.178
-121.176.120.78
-123.100.73.185
-121.158.228.158
-190.26.104.209
-91.222.216.98
-93.177.147.240
-37.98.241.171
-37.77.130.250
-209.191.129.1
-173.237.124.156
-115.125.115.199
-85.125.59.26
 109.236.123.130
 210.113.60.121
-92.39.60.203
-101.255.16.226
-74.98.197.3
-80.71.54.18
-66.163.0.173
-213.154.81.99
-203.126.117.82
-193.180.20.142
-219.86.166.31
-219.92.247.161
-197.92.10.9
-120.146.195.117
-210.110.3.90
-194.32.87.98
-190.152.89.229
-122.154.151.59
-216.185.192.1
-176.97.40.78
-135.0.79.214
-112.168.221.215
-84.245.216.180
-188.129.7.129
-173.193.245.53
-113.61.145.10
-91.140.198.213
-112.145.91.223
-222.122.156.117
-195.78.239.35
-122.34.125.15
-195.93.203.221
-61.253.150.42
-110.173.233.215
-200.25.221.29
-212.73.69.6
-92.105.208.118
-213.165.176.156
 61.220.40.118
-204.13.112.79
-208.110.140.33
-46.14.254.27
-177.104.250.129
-84.253.19.21
-84.245.192.146
-161.53.203.203
+209.191.129.1
+200.49.160.35
+118.35.78.70
+212.73.69.6
+95.66.182.191
+202.29.94.172
+190.128.242.206
+190.152.89.229
+101.255.16.226
+197.92.10.9
+190.26.104.209
+121.163.48.231
+61.93.207.178
+94.255.122.42
+221.163.86.113
 188.168.157.108
-106.247.238.10
-181.143.153.30\
+122.154.151.59
+195.177.122.222
+121.176.120.78
+84.245.216.180
+208.67.220.220
+200.25.221.29
+211.224.66.119
+178.168.19.55
+61.253.150.42
+216.185.192.1
+112.168.221.215
+78.29.14.127
+176.97.40.78
+37.98.241.171
+92.105.208.118
+115.125.115.199
+195.78.239.35
+94.230.183.229
+181.143.153.30
+63.238.52.1
+135.0.79.214
+173.193.245.53
+82.114.92.226
+193.180.20.142
+193.238.223.91
+91.122.208.159
+173.237.124.156
+113.61.145.10
+188.235.4.55
+216.143.135.11
+96.231.165.226
+219.92.48.41
+77.53.69.242
+111.68.25.254
+58.176.213.242
+191.243.36.41
+124.193.117.18
+201.57.131.42
+123.202.5.158
+79.165.61.24
+121.173.30.111
+218.154.106.132
+81.28.174.32
+159.233.156.10
+24.61.252.234
+202.74.165.10
+162.13.11.127
+27.0.12.26
+84.253.19.21
+114.146.24.121
+81.5.119.47
+206.161.124.226
+107.199.98.142
+66.135.40.83
+62.168.69.202
+108.210.186.22
+58.176.194.23
+176.197.103.230
+108.47.214.11
+91.222.216.98
+121.177.30.151
+77.68.68.11
+112.145.164.201
+113.43.31.234
+58.125.195.39
+183.109.217.6
+86.123.68.152
+82.147.130.3
+85.126.186.225
+122.129.105.86
+1.34.27.247
+121.162.219.246
+194.215.227.4
+61.91.33.6
+41.138.67.234
+190.12.58.215
+220.86.55.153
+173.12.189.185
+50.97.176.194
+176.35.211.172
+58.126.74.60
+220.124.55.112
+182.129.150.70
+14.199.144.36
+80.255.150.14
+46.164.150.230
+59.48.71.206
+64.83.236.42
+124.10.221.74
+196.15.192.81
+175.213.16.111
+41.138.67.254
+203.236.232.23
+112.165.85.206
+60.250.141.28
+123.203.31.102
+82.153.92.178
+203.45.8.226
+204.13.112.79
+41.162.9.37
+76.79.201.2
+203.172.141.52
+60.249.10.15
+173.167.136.146
+91.234.103.91
+58.176.194.180
+12.172.9.45
+177.220.147.10
+193.253.219.216
+219.86.166.31
+41.228.66.65
+123.100.73.185
+119.246.203.19
+121.119.192.157
+58.177.100.10
+222.139.153.250
+68.170.213.27
+95.84.141.83
+213.165.176.156
+14.41.107.22
+122.128.173.118
+202.58.240.51
+123.203.108.44
+219.136.151.66
+14.199.146.169
+149.126.29.65
+220.246.31.156
+46.14.254.27
+218.44.142.186
+114.130.11.66
+37.187.151.16
+119.202.226.25
+116.40.195.227
+119.247.127.217
+203.140.150.48
+220.9.132.39
+5.40.118.195
+203.35.8.162
+74.95.14.33
+14.33.106.160
+211.144.32.87
+121.136.176.157
+180.189.65.213
+112.117.220.164
+121.161.115.180
+212.14.63.230
+121.181.219.7
+202.63.64.57
+208.67.222.222
+119.246.88.148
+212.58.12.245
+193.200.173.126
+93.159.189.105
+125.139.238.45
+212.17.86.49
+188.32.182.75
+218.21.248.226
+80.78.68.203
+61.63.47.68
+91.148.117.243
+175.195.6.225
+118.218.221.157
+64.71.17.162
+14.198.146.45
+202.212.162.155
+175.199.75.204
+58.253.87.45
+80.254.174.205
+125.214.202.67
+121.164.119.30
+41.138.68.28
+60.32.100.122
+188.95.72.193
+165.228.233.175
+85.204.57.156
+203.71.9.14
+111.113.6.138
+212.25.44.52
+188.162.32.146
+212.194.169.94
+220.87.131.217
+68.67.68.83
+210.201.108.159
+124.244.8.35
+59.148.128.221
+61.238.7.24
 '''
+
 dns_servers = set(dns_servers.split())
 
 inactive_servers = set()
+good_servers = set()
 default_servers = set()
 ini_file = ''
 config = configparser.ConfigParser()
@@ -179,7 +259,6 @@ tested_ips = set()
 good_ips = set()
 ip_is_enough = False
 start_time= time.time()
-interactive = False
 check_inifile = False
 lock = threading.RLock()
 
@@ -213,16 +292,16 @@ def groupip(ip):  ## ip = [time, ip, [domains]]
             config.write(f)
 
 def nslookup(domain, nservers=['8.8.8.8', '114.114.114']):
-    global tested_ips, ip_is_enough, inactive_servers
+    global tested_ips, ip_is_enough, inactive_servers, good_servers
 
     if ip_is_enough: return
     try:
         q = DNSRecord(q=DNSQuestion(domain, getattr(QTYPE,'A')))
-        a_pkt = q.send(nservers[0], 53, tcp=False, timeout=2)
+        a_pkt = q.send(nservers[0], 53, tcp=False, timeout=3)
         a = DNSRecord.parse(a_pkt)
         if a.header.tc:
             # Truncated - retry in TCP mode
-            a_pkt = q.send(nservers[0], 53, tcp=True, timeout=2)
+            a_pkt = q.send(nservers[0], 53, tcp=True, timeout=3)
             a = DNSRecord.parse(a_pkt)
         a = a.short()
         if not a:
@@ -232,8 +311,9 @@ def nslookup(domain, nservers=['8.8.8.8', '114.114.114']):
             if nservers[0] not in inactive_servers:
                 inactive_servers.add(nservers[0])
                 #print(inactive_servers)
-            if interactive:
-                print('dns error: ', domain, nservers[0], e)
+            if nservers[0] in good_servers:
+                good_servers.remove(nservers[0])
+            print('dns error: ', domain, nservers[0], e)
         return
     a = a.split('\n')
 
@@ -247,7 +327,10 @@ def nslookup(domain, nservers=['8.8.8.8', '114.114.114']):
                 if ip in tested_ips:
                     continue
                 tested_ips.add(ip)
-            checkip(ip, domain)
+            if checkip(ip, domain):
+                with lock:
+                    if nservers[0] not in good_servers:
+                        good_servers.add(nservers[0])
 
 
 def get_dnsserver_list():
@@ -273,7 +356,7 @@ def get_dnsserver_list():
         return []
 
 def checkip(ip, domain):
-    global ip_is_enough, tested_ips, good_ips, interactive, start_time
+    global ip_is_enough, tested_ips, good_ips, start_time
     with lock:
         if ip_is_enough:
             return False
@@ -327,12 +410,10 @@ def checkip(ip, domain):
                 if domain in result[2]:
                     isgoodip = True
                 good_ips.add(result[1])
-                if interactive:
-                    print(ip, domain, '## good ip, tested %d good %d elapsed %.1fs'
-                        % (len(tested_ips), len(good_ips), time.time()-start_time))
-                else:
-                    groupip(result)
-            elif interactive:
+                print(ip, domain, '## good ip, tested %d good %d elapsed %.1fs'
+                    % (len(tested_ips), len(good_ips), time.time()-start_time))
+                groupip(result)
+            else:
                 print(ip, domain, '## bad ip, tested %d good %d elapsed %.1fs'
                       % (len(tested_ips), len(good_ips), time.time()-start_time))
     return isgoodip
@@ -345,14 +426,14 @@ def thread_alive(tasks):
     return False
 
 def checkini(threads_num):
-    global ini_file, config, dns_servers, default_servers, inactive_servers, tested_ips, good_ips
+    global ini_file, config, dns_servers, default_servers, inactive_servers, good_servers, tested_ips, good_ips
     global host_map, ip_is_enough, max_ip_num, google_com, max_threads, st
 
     start_time= time.time()
 
     config.read(ini_file)
     if not config.has_section('IPLookup'):
-        config['IPLookup'] = {'google_com':'', 'InactiveServers':'', 'MapHost':1}
+        config['IPLookup'] = {'google_com':'', 'Servers':'', 'InactiveServers':'', 'MapHost':1}
         with open(ini_file, 'w') as f:
             config.write(f)
 
@@ -363,10 +444,18 @@ def checkini(threads_num):
     else:
         inactive_servers_0 = set()
         inactive_servers = set()
-    servers = dns_servers - inactive_servers
-    if len(servers) < 20:
-        servers = set(random.sample(dns_servers, 40))
-    servers = servers|default_servers
+    s = config.get('IPLookup', 'Servers') if config.has_option('IPLookup', 'Servers') else ''
+    if s:
+        good_servers_0 = set(s.split('|'))
+        good_servers = set(s.split('|'))
+    else:
+        good_servers_0 = set()
+        good_servers = set()
+    servers = good_servers|default_servers
+    if len(servers) < 40:
+        servers = servers|set(random.sample((dns_servers-inactive_servers-servers), 40-len(servers)))
+    if len(servers) < 40:
+        servers = servers|set(random.sample((dns_servers-servers), 40-len(servers)))
 
     map_host = config.getint('IPLookup', 'MapHost') if config.has_option('IPLookup', 'MapHost') else 0
     if map_host:
@@ -425,9 +514,12 @@ def checkini(threads_num):
                         break
             if ip_is_enough: break
             servers = set(random.sample(dns_servers, 40))  ##  another try with other servers
-        if inactive_servers != inactive_servers_0:
-            print(inactive_servers)
-            config.set('IPLookup', 'InactiveServers', '|'.join(i for i in inactive_servers))
+
+        inactive_servers = inactive_servers & dns_servers
+        if inactive_servers != inactive_servers_0 or good_servers != good_servers_0:
+            #print(good_servers)
+            config.set('IPLookup', 'Servers', '|'.join(i for i in good_servers))
+            config.set('IPLookup', 'InactiveServers', '|'.join(i for i in list(inactive_servers)[:49])) # 最多保存50个无效DNS server
             with open(ini_file, 'w') as f:
                 config.write(f)
 
@@ -510,90 +602,6 @@ def checkini(threads_num):
     with open(ini_file, 'w') as f:
         config.write(f)
 
-def lookupinteractive(domain, nservers, threads_num, ipnum):
-    global dns_servers, default_servers
-    global tested_ips, good_ips, ip_is_enough, start_time
-
-    start_time= time.time()
-    for chance in range(2):
-        if len(nservers):
-            servers = nservers
-        else:
-            servers = default_servers
-            if len(servers) < 40:
-                servers = servers|set(random.sample((dns_servers-servers), 40-len(servers)))
-
-        q = set()
-        with ThreadPoolExecutor(max_workers=threads_num) as executor:
-            for nameserver in servers:
-                q.add(executor.submit(nslookup, domain, [nameserver]))
-            while thread_alive(q):
-                try:
-                    time.sleep(0.1)
-                except KeyboardInterrupt:
-                    ip_is_enough = True
-                    print('user interrupt. wait until all threads complete...')
-                    executor.shutdown()
-                    break
-                if len(good_ips) >= ipnum:
-                    ip_is_enough = True
-                    print('ip is enough! wait until all threads complete...')
-                    executor.shutdown()
-                    break
-        if ip_is_enough: break
-
-    if not ip_is_enough:
-        print('%d ips found so far.\nwould you like to try extra search?' % len(good_ips))
-        a = input('type "y" to continue or otherwise to skip : ')
-        if a == 'y':
-            print('extra search in some ranges...')
-            iprange = []
-            if len(good_ips):
-                for i in good_ips:
-                    r = ".".join(i.split('.')[0:3])+'.0/24'
-                    if r not in iprange:
-                        iprange.append(r)
-            else:
-                 for i in tested_ips:
-                    r = ".".join(i.split('.')[0:3])+'.0/24'
-                    if r not in iprange:
-                        iprange.append(r)
-                        if len(iprange) >= 4:
-                            break
-            q = set()
-            with ThreadPoolExecutor(max_workers=threads_num) as executor:
-                for l in iprange:
-                    for ip in IPv4Network(l).hosts():
-                        ip = str(ip)
-                        if ip not in tested_ips:
-                            q.add(executor.submit(checkip, ip, domain))
-                while thread_alive(q):
-                    try:
-                        time.sleep(0.1)
-                    except KeyboardInterrupt:
-                        ip_is_enough = True
-                        print('user interrupt. wait until all threads complete...')
-                        executor.shutdown()
-                        break
-                    if len(good_ips) >= ipnum:
-                        ip_is_enough = True
-                        print('ip is enough! wait until all threads complete...')
-                        executor.shutdown()
-                        break
-
-    if not len(good_ips):
-        print('sorry, no good ip found. please try again later.')
-    else:
-        out_file = 'good_ip.ini'
-        config.read(out_file)
-        if not config.has_section('IPList'):
-            config['IPList'] = {}
-        config.set('IPList', domain, '|'.join(i for i in good_ips))
-        with open(out_file, 'w') as f:
-            config.write(f)
-        print('%d good ips found and saved to file "%s".' % (len(good_ips), out_file))
-
-
 import win32gui, ctypes
 # from win32con
 WM_SETTEXT = 12
@@ -602,10 +610,8 @@ WM_GETTEXTLENGTH = 14
 hgui = None
 
 def ctrl_exists(h):
-    try:
-        return win32gui.GetParent(h)
-    except:
-        return 0
+    try: return win32gui.GetParent(h)
+    except: return 0
 
 def setvar(vname, v=''):
     global hgui
@@ -677,24 +683,48 @@ def set_proxy(prx=None):
 
     return True
 
-def get_valid_ip(ips):
-    global google_com, ip_is_enough
+GIP = []
+def check_google_ip(ip):
+    global GIP
+    tempsocks = socket.socket
+    socket.socket = orig_socket
+    isgoodip = False
+    try:
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.settimeout(3)
+        sock.connect((ip, 80))
+        sock.send(bytes("GET / HTTP/1.1\r\n\r\n", "utf-8"))
+        data = sock.recv(1024)
+        data = data.decode('utf-8', 'ignore')
+        #print(data)
+        if re.match('(?is)HTTP/\d+\.\d+ +[123]\d\d +.*Server: *gws', data):
+            isgoodip = True
+    except Exception as e:
+        pass
+    finally:
+        if sock: sock.close()
+    socket.socket = tempsocks
+    with lock:
+        if isgoodip:
+            ip_is_enough = True
+            GIP.remove(ip)
+            GIP = [ip] + GIP
+        else:
+            GIP.remove(ip)
 
-    google_com = {}
-    validip = []
+def valid_google_ip(ips):
+    global GIP, ip_is_enough
+    GIP = ips[:]
     q = set()
     with ThreadPoolExecutor(max_workers=5) as executor:
         for ip in ips:
-            q.add(executor.submit(checkip, ip, 'google.com'))
+            q.add(executor.submit(check_google_ip, ip))
         while thread_alive(q):
             time.sleep(0.1)
-            if len(google_com):
-                ip_is_enough = True
-                validip = list(google_com.keys())
+            if ip_is_enough:
                 executor.shutdown()
                 break
-    return validip
-
+    return GIP
 
 def get_google_ip():
     global ini_file, config, default_servers, inactive_servers, domains, google_com
@@ -702,7 +732,7 @@ def get_google_ip():
 
     config.read(ini_file)
     if not config.has_section('IPLookup'):
-        config['IPLookup'] = {'google_com':'', 'InactiveServers':'', 'MapHost':1}
+        config['IPLookup'] = {'google_com':'', 'InactiveServers':'', 'MapHost':1, 'GIP':''}
         with open(ini_file, 'w') as f:
             config.write(f)
 
@@ -710,64 +740,72 @@ def get_google_ip():
     validip = []
     googleip = []
     if ips:
-        googleip = ips.split('|', 20)
-        validip = get_valid_ip(googleip)
-
-    if not len(validip):
-        # print('nslookup google ip ...')
-        s = config.get('IPLookup', 'InactiveServers') if config.has_option('IPLookup', 'InactiveServers') else ''
-        if s:
-            inactive_servers_0 = set(s.split('|'))
-            inactive_servers = set(s.split('|'))
-        else:
-            inactive_servers_0 = set()
-            inactive_servers = set()
-        servers = dns_servers - inactive_servers
-        if len(servers) < 20:
-            servers = set(random.sample(dns_servers, 40))
-        servers = servers|default_servers
-        for chance in range(2):
-            sdomains = random.sample(domains, 4)  ## pick domains randomly
-            q = set()
-            ip_is_enough = False
-            google_com = {}
-            with ThreadPoolExecutor(max_workers=10) as executor:
-                for domain in sdomains:
-                    for nameserver in servers:
-                        q.add(executor.submit(nslookup, domain, [nameserver]))
-
-                while thread_alive(q):
-                    time.sleep(0.1)
-                    if len(google_com):
-                        ip_is_enough = True
-                        #print('got a valid google ip, wait until all threads end ...')
-                        executor.shutdown()
-                        break
-            if ip_is_enough: break
-        if len(google_com):
-            validip = list(google_com.keys())
-
-        if inactive_servers != inactive_servers_0:
-            config.set('IPLookup', 'InactiveServers', '|'.join(i for i in inactive_servers))
+        googleip = ips.split('|')
+        validip = valid_google_ip(googleip)
+        if validip != googleip:
+            config.set('IPLookup', 'google_com', '|'.join(ip for ip in validip))
             with open(ini_file, 'w') as f:
                 config.write(f)
 
     if not len(validip):
+        ips = config.get('IPLookup', 'GIP') if config.has_option('IPLookup', 'GIP') else ''
+        if ips:
+            googleip = ips.split('|')
+            validip = valid_google_ip(googleip)
+            if validip != googleip:
+                config.set('IPLookup', 'GIP', '|'.join(ip for ip in validip))
+                with open(ini_file, 'w') as f:
+                    config.write(f)
+
+##    if not len(validip):
+##        # print('nslookup google ip ...')
+##        s = config.get('IPLookup', 'InactiveServers') if config.has_option('IPLookup', 'InactiveServers') else ''
+##        if s:
+##            inactive_servers_0 = set(s.split('|'))
+##            inactive_servers = set(s.split('|'))
+##        else:
+##            inactive_servers_0 = set()
+##            inactive_servers = set()
+##        servers = dns_servers - inactive_servers
+##        if len(servers) < 20:
+##            servers = set(random.sample(dns_servers, 40))
+##        servers = servers|default_servers
+##        for chance in range(2):
+##            sdomains = random.sample(domains, 4)  ## pick domains randomly
+##            q = set()
+##            ip_is_enough = False
+##            google_com = {}
+##            with ThreadPoolExecutor(max_workers=10) as executor:
+##                for domain in sdomains:
+##                    for nameserver in servers:
+##                        q.add(executor.submit(nslookup, domain, [nameserver]))
+##
+##                while thread_alive(q):
+##                    time.sleep(0.1)
+##                    if len(google_com):
+##                        ip_is_enough = True
+##                        #print('got a valid google ip, wait until all threads end ...')
+##                        executor.shutdown()
+##                        break
+##            if ip_is_enough: break
+##        if len(google_com):
+##            validip = list(google_com.keys())
+##            config.set('IPLookup', 'google_com', '|'.join(ip for ip in validip))
+##            with open(ini_file, 'w') as f:
+##                config.write(f)
+
+##        if inactive_servers != inactive_servers_0:
+##            config.set('IPLookup', 'InactiveServers', '|'.join(i for i in inactive_servers))
+##            with open(ini_file, 'w') as f:
+##                config.write(f)
+
+    if not len(validip):
         validip = get_google_ip_ex()
-
-    if len(validip):
-        for ip in validip:
-            if ip in googleip:
-                googleip.remove(ip)
-            googleip = [ip] + googleip
-    else:
-        googleip = []
-    newips = '|'.join(ip for ip in googleip)
-    if newips != ips:
-        config.set('IPLookup', 'google_com', newips)
-        with open(ini_file, 'w') as f:
-            config.write(f)
-
+        if len(validip):
+            config.set('IPLookup', 'GIP', '|'.join(ip for ip in validip))
+            with open(ini_file, 'w') as f:
+                config.write(f)
+                
     if len(validip):
         return validip[0]
 
@@ -787,9 +825,14 @@ def read_from_url(url, b=1024):
     return s
 
 def get_google_ip_ex():
-    for chance in range(2):
+    sources = ['1', '2', '3', '4']
+    gip_source = config.get('IPLookup', 'GIPSource') if config.has_option('IPLookup', 'GIPSource') else ''
+    source = gip_source
+    if not source in sources:
+        source = sources[0]
+    while 1:
         ips = []
-        if chance == 0:
+        if source == '1':
             url = r'http://www.xiexingwen.com/google/tts.php?query=*'
             s = read_from_url(url, 1024)
             if s:
@@ -797,7 +840,15 @@ def get_google_ip_ex():
                 if m:
                     s = m.group(1)
                     ips = re.findall(r'"(\d+\.\d+\.\d+\.\d+)"', s)
-        elif chance == 1:
+
+        elif source == '2':
+            url = r'https://raw.githubusercontent.com/txthinking/google-hosts/master/hosts'
+            s = read_from_url(url, 512)
+            if s:
+                ips = re.findall(r'(?im)^(\d+\.\d+\.\d+\.\d+) +.*\.google', s)
+                ips = list(set(ips))
+
+        elif source == '3':
             url = r'http://www.go2121.com/google/splus.php?query=*'
             s = read_from_url(url, 1024)
             if s:
@@ -805,12 +856,30 @@ def get_google_ip_ex():
                 if m:
                     s = m.group(1)
                     ips = re.findall(r'"(\d+\.\d+\.\d+\.\d+)"', s)
+
+        else:
+            url = r'http://anotherhome.net/easygoagent/proxy.ini'
+            s = read_from_url(url, 4*1024)
+            if s:
+                m = re.search(r'(?i)google_hk\s*=\s*([\d\.\|]+)', s)
+                if m:
+                    ips = m.group(1).split('|', 20)
+        
         if len(ips):
-            #print(ips)
-            ips = get_valid_ip(ips)
+            ips = valid_google_ip(ips)
             if len(ips):
+                if source != gip_source:
+                    config.set('IPLookup', 'GIPSource', source)
+                    with open(ini_file, 'w') as f:
+                        config.write(f)               
                 break
 
+        sources.remove(source)
+        if not len(sources):
+            break
+        else:
+            source = sources[0]
+        
     if len(ips) > 20:
         ips = ips[:19]
     return ips
@@ -977,7 +1046,7 @@ def downloader(block_id, url, fobj, buffer=16384):
             try:
                 block = response.read(buffer)
                 if not block:
-                    continue
+                    break
             except:
                 break
             with lock:
@@ -1205,7 +1274,7 @@ def download_chrome(plist=[]):
 
 def main():
     global ini_file, ip_is_enough, tested_ips, good_ips, default_servers
-    global max_threads, interactive, check_inifile
+    global max_threads, check_inifile
     global hgui
 
     default_servers = set(get_dnsserver_list())
@@ -1229,31 +1298,31 @@ def main():
         resp_timer.start()
         #print(hgui, func, v)
         func(v) # start a func
-
         resp_timer.cancel()
-    else:
-        interactive = True
-        print('Mychrome Internet Module')
-        while True:
-            a = input('\ntype domain to resolve of "q" to exit : ')
-            if a == 'q':
-                break
-            if a == '' or '.' not in a:
-                continue
-            s = a.split()
-            domain = s[0]
-            if len(s) > 1:
-                server = {s[1]}
-            else:
-                server = set()
-            threads_num = 30
-            ipnum = 10
-            lookupinteractive(domain, server, threads_num, ipnum)
-            tested_ips = set()
-            good_ips = set()
-            ip_is_enough = False
 
 
 if __name__ == "__main__":
-    main()
+    default_servers = set(get_dnsserver_list())
+    if len(sys.argv) == 2: # check ini_file
+        ini_file = sys.argv[1]
+        if os.path.isfile(ini_file):
+            check_inifile = True
+            checkini(max_threads)
+    elif len(sys.argv) >= 4 and sys.argv[1] == 'child_thread_by':
+        # child thread to run a function:
+        # child_thread_by 0xhwnd function arg1 arg2 ...
+        hgui = win32gui.FindWindowEx(int(sys.argv[2], 16), None, 'Edit', None)
+        #print(int(sys.argv[2], win32gui.GetParent(hgui), hgui)
+        ini_file = 'Mychrome.ini'
+        func = globals()[sys.argv[3]]
+        v = None
+        if len(sys.argv) > 4:
+            v = sys.argv[4:]
+        global resp_timer
+        resp_timer = threading.Timer(3, send_timestr)
+        resp_timer.start()
+        #print(hgui, func, v)
+        func(v) # start a func
+        resp_timer.cancel()
+
     #input('press any key to quit')
