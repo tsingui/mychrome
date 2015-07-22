@@ -1,10 +1,10 @@
 ﻿
-latest=3.2.1
-url=http://code.taobao.org/svn/mychrome/trunk/release/MyChrome_v3.2.1.7z
-update=1. 去掉网络扩展 inet.exe，减小软件体积（压缩包700K左右）。\n2. inet.exe以插件方式提供：如需SOCKS代理支持或查找IP用于浏览器访问部分google服务，可在设置界面中勾选“启用网络增强插件”自动下载插件。若不想用插件，取消勾选或直接删除inet.exe、MSVCR100.dll这两个文件。
-latest_x64=3.2.1
-url_x64=http://code.taobao.org/svn/mychrome/trunk/release/MyChrome_v3.2.1_x64.7z
-update_x64=1. 去掉网络扩展 inet.exe，减小软件体积（压缩包700K左右）。\n2. inet.exe以插件方式提供：如需SOCKS代理支持或查找IP用于浏览器访问部分google服务，可在设置界面中勾选“启用网络增强插件”自动下载插件。若不想用插件，取消勾选或直接删除inet.exe、MSVCR100.dll这两个文件。
+latest=3.3
+url=http://code.taobao.org/svn/mychrome/trunk/release/MyChrome_v3.3.7z
+update=1. 修正 Win 10 中锁定任务栏后出现双图标的问题。从 MyChrome 3.3 开始，Win 7 以上系统中可以直接右键菜单锁定 MyChrome.exe 至任务栏。\n2. 增加从新浪更新 Chrome 浏览器的选项（仅支持 Stable/Beta/Dev 分支）。
+latest_x64=3.3
+url_x64=http://code.taobao.org/svn/mychrome/trunk/release/MyChrome_v3.3_x64.7z
+update_x64=1. 修正 Win 10 中锁定任务栏后出现双图标的问题。从 MyChrome 3.3 开始，Win 7 以上系统中可以直接右键菜单锁定 MyChrome.exe 至任务栏。\n2. 增加从新浪更新 Chrome 浏览器的选项（仅支持 Stable/Beta/Dev 分支）。
 
 inet_latest=3.2
 inet_url=http://code.taobao.org/svn/mychrome/trunk/release/inet.7z
