@@ -15,7 +15,7 @@ EndIf
 
 $__hwnd_vars = GUICreate("main thread")
 GUICtrlCreateEdit("", 0, 0, 350)
-;GUISetState(@SW_SHOW)
+;~ GUISetState(@SW_SHOW)
 
 Func _StartThread($exe, $function, $p1 = "", $p2 = "", $p3 = "", $p4 = "", $p5 = "", $p6 = "", $p7 = "", $p8 = "", $p9 = "", $p10 = "")
 	Local $i, $p, $para
