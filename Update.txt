@@ -1,10 +1,10 @@
 ﻿
-latest=3.3
-url=http://code.taobao.org/svn/mychrome/trunk/release/MyChrome_v3.3.7z
-update=1. 修正 Win 10 中锁定任务栏后出现双图标的问题。从 MyChrome 3.3 开始，Win 7 以上系统中可以直接右键菜单锁定 MyChrome.exe 至任务栏。\n2. 增加从新浪更新 Chrome 浏览器的选项（仅支持 Stable/Beta/Dev 分支）。
-latest_x64=3.3
-url_x64=http://code.taobao.org/svn/mychrome/trunk/release/MyChrome_v3.3_x64.7z
-update_x64=1. 修正 Win 10 中锁定任务栏后出现双图标的问题。从 MyChrome 3.3 开始，Win 7 以上系统中可以直接右键菜单锁定 MyChrome.exe 至任务栏。\n2. 增加从新浪更新 Chrome 浏览器的选项（仅支持 Stable/Beta/Dev 分支）。
+latest=3.4
+url=http://code.taobao.org/svn/mychrome/trunk/release/MyChrome_v3.4.7z
+update=1. 修正 Chromium 在 Win 10 中锁定任务栏后出现双图标的问题。\n2. 代理设置增加“直接连接”、“跟随系统”选项。\n3. 优化 IP 验证的速度。
+latest_x64=3.4
+url_x64=http://code.taobao.org/svn/mychrome/trunk/release/MyChrome_v3.4_x64.7z
+update_x64=1. 修正 Chromium 在 Win 10 中锁定任务栏后出现双图标的问题。\n2. 代理设置增加“直接连接”、“跟随系统”选项。\n3. 优化 IP 验证的速度。
 
 inet_latest=3.2
 inet_url=http://code.taobao.org/svn/mychrome/trunk/release/inet.7z
