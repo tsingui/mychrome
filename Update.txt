@@ -14,6 +14,7 @@ update_x64_en-US=1. Bug fixed: Double Chromium icons appear after pinning to tas
 inet_latest=3.2
 inet_url=http://code.taobao.org/svn/mychrome/trunk/release/inet.7z
 inet_update=IP失效时尝试从第三方网站获取Google可用IP。
+
 inet_latest_x64=3.2
 inet_url_x64=http://code.taobao.org/svn/mychrome/trunk/release/inet.7z
 inet_update_x64=IP失效时尝试从第三方网站获取Google可用IP。
