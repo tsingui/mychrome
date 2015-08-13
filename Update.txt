@@ -2,13 +2,13 @@
 latest=3.4
 url=http://code.taobao.org/svn/mychrome/trunk/release/MyChrome_v3.4.7z
 update=1. 修正 Chromium 在 Win 10 中锁定任务栏后出现双图标的问题。\n2. 代理设置增加“直接连接”、“跟随系统”选项。\n3. 优化 IP 验证的速度。
-update_zh-CHT=1. 修正 Chromium 在 Win 10 中鎖定任務欄後出現雙圖標的問題。\n2. 代理設置增加“直接連接”、“跟隨系統”選項。\n3. 優化 IP 驗證的速度。
+update_zh-TW=1. 修正 Chromium 在 Win 10 中鎖定任務欄後出現雙圖標的問題。\n2. 代理設置增加“直接連接”、“跟隨系統”選項。\n3. 優化 IP 驗證的速度。
 update_en-US=1. Bug fixed: Double Chromium icons appear after pinning to taskbar in Win 10.\n2. "No proxy" and "System proxy" added to proxy type.
 
 latest_x64=3.4
 url_x64=http://code.taobao.org/svn/mychrome/trunk/release/MyChrome_v3.4_x64.7z
 update_x64=1. 修正 Chromium 在 Win 10 中锁定任务栏后出现双图标的问题。\n2. 代理设置增加“直接连接”、“跟随系统”选项。\n3. 优化 IP 验证的速度。
-update_x64_zh-CHT=1. 修正 Chromium 在 Win 10 中鎖定任務欄後出現雙圖標的問題。\n2. 代理設置增加“直接連接”、“跟隨系統”選項。\n3. 優化 IP 驗證的速度。
+update_x64_zh-TW=1. 修正 Chromium 在 Win 10 中鎖定任務欄後出現雙圖標的問題。\n2. 代理設置增加“直接連接”、“跟隨系統”選項。\n3. 優化 IP 驗證的速度。
 update_x64_en-US=1. Bug fixed: Double Chromium icons appear after pinning to taskbar in Win 10.\n2. "No proxy" and "System proxy" added to proxy type.
 
 inet_latest=3.2
