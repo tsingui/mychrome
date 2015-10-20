@@ -4,7 +4,7 @@
 #AutoIt3Wrapper_Compile_Both=y
 #AutoIt3Wrapper_UseX64=y
 #AutoIt3Wrapper_Res_Description=Google Chrome Portable
-#AutoIt3Wrapper_Res_Fileversion=3.6.1.0
+#AutoIt3Wrapper_Res_Fileversion=3.6.2.0
 #AutoIt3Wrapper_Res_LegalCopyright=甲壳虫<jdchenjian@gmail.com>
 #AutoIt3Wrapper_Res_Language=1033
 #AutoIt3Wrapper_AU3Check_Parameters=-q
@@ -33,7 +33,7 @@
 #include "AppMute.au3"
 
 Global $WinVersion = _WinAPI_GetVersion()
-Global Const $AppVersion = "3.6.1" ; MyChrome version
+Global Const $AppVersion = "3.6.2" ; MyChrome version
 Global $AppName = StringRegExpReplace(@ScriptName, "\.[^.]*$", "")
 Global $inifile = @ScriptDir & "\" & $AppName & ".ini"
 Global $Language = IniRead($inifile, "Settings", "Language", "Auto")
@@ -489,12 +489,12 @@ Func Mouse_Event($hWnd, $MsgID, $wParam, $lParam)
 
 	If $ChromeIsHidden Then Return $GUI_RUNDEFMSG
 
+	$time = TimerInit()
+	$timeDiff = TimerDiff($aMouseEvent[1])
 	$x = BitAND($lParam, 0x0000FFFF) ;LoWord
 	$y = BitShift($lParam, 16) ;HiWord
 
-	$time = TimerInit()
-	$timeDiff = TimerDiff($aMouseEvent[1])
-	Local $button, $block = 0
+	Local $button
 	Switch $MsgID
 		Case $WM_AUTOITLBUTTONDOWN, $WM_AUTOITRBUTTONDOWN, $WM_AUTOITMBUTTONDOWN
 			$aMouseEvent[2] = $x
@@ -508,15 +508,15 @@ Func Mouse_Event($hWnd, $MsgID, $wParam, $lParam)
 			Else
 				$button = "M"
 			EndIf
-			$aMouseEvent[1] = $time
 
-			If $button = "R" And $aMouseEvent[0] = $button & "Click" And $timeDiff < $DoubleClickTime Then
-				$aMouseEvent[0] = $button & "DClick"
+			If $button = "R" And $aMouseEvent[0] = "RClick" And $timeDiff < $DoubleClickTime Then
+				$aMouseEvent[0] = "RDClick"
 			ElseIf Pixel_Distance($x, $y, $aMouseEvent[2], $aMouseEvent[3]) > 50 Then
 				$aMouseEvent[0] = $button & "Drop"
 			Else
 				$aMouseEvent[0] = $button & "Click"
 			EndIf
+			$aMouseEvent[1] = $time
 
 		Case $WM_AUTOITLDBLCLK
 			$aMouseEvent[0] = "LDClick"
@@ -531,7 +531,10 @@ Func Mouse_Event($hWnd, $MsgID, $wParam, $lParam)
 			$aMouseEvent[1] = $time
 	EndSwitch
 
-	;ToolTip("$aMouseEvent[0]: " & $aMouseEvent[0] & @CRLF)
+	;If $aMouseEvent[1] = $time Then
+	;	ConsoleWrite($time & " : " & $aMouseEvent[0] & @CRLF)
+	;EndIf
+
 	If $aMouseEvent[1] = $time And $aMouseEvent[0] = $BosskeyM Then
 		Bosskey()
 
@@ -563,27 +566,22 @@ Func HookMouse()
 	$hMouseHook = _WinAPI_SetWindowsHookEx($WH_MOUSE, $mouseHOOKproc, $hHookLib, $iThread)
 	DllCall($hookdll, "int", "SetValuesMouse", "hwnd", $__hwnd_vars, "hwnd", $hMouseHook)
 
-	If $BosskeyM = "LClick" Or $BosskeyM = "LDrop" Then
-		GUIRegisterMsg($WM_AUTOITLBUTTONDOWN, "Mouse_Event")
-		GUIRegisterMsg($WM_AUTOITLBUTTONUP, "Mouse_Event")
-	EndIf
-	If $BosskeyM = "LDClick" Then
-		GUIRegisterMsg($WM_AUTOITLDBLCLK, "Mouse_Event")
-	EndIf
+	Switch StringLeft($BosskeyM, 1)
+		Case "L"
+			GUIRegisterMsg($WM_AUTOITLBUTTONDOWN, "Mouse_Event")
+			GUIRegisterMsg($WM_AUTOITLBUTTONUP, "Mouse_Event")
+			GUIRegisterMsg($WM_AUTOITLDBLCLK, "Mouse_Event")
 
-	If $BosskeyM = "RClick" Or $BosskeyM = "RDrop" Or $BosskeyM = "RDClick" Then
-		GUIRegisterMsg($WM_AUTOITRBUTTONDOWN, "Mouse_Event")
-		GUIRegisterMsg($WM_AUTOITRBUTTONUP, "Mouse_Event")
-	EndIf
-	GUIRegisterMsg($WM_AUTOITRDBLCLK, "Mouse_Event") ; no right bouble-click event within Chrome window
+		Case "R"
+			GUIRegisterMsg($WM_AUTOITRBUTTONDOWN, "Mouse_Event")
+			GUIRegisterMsg($WM_AUTOITRBUTTONUP, "Mouse_Event")
+			GUIRegisterMsg($WM_AUTOITRDBLCLK, "Mouse_Event") ; no right bouble-click event within Chrome window
 
-	If $BosskeyM = "MClick" Or $BosskeyM = "MDrop" Then
-		GUIRegisterMsg($WM_AUTOITMBUTTONDOWN, "Mouse_Event")
-		GUIRegisterMsg($WM_AUTOITMBUTTONUP, "Mouse_Event")
-	EndIf
-	If $BosskeyM = "MDClick" Then
-		GUIRegisterMsg($WM_AUTOITMDBLCLK, "Mouse_Event")
-	EndIf
+		Case Else
+			GUIRegisterMsg($WM_AUTOITMBUTTONDOWN, "Mouse_Event")
+			GUIRegisterMsg($WM_AUTOITMBUTTONUP, "Mouse_Event")
+			GUIRegisterMsg($WM_AUTOITMDBLCLK, "Mouse_Event")
+	EndSwitch
 
 	OnAutoItExitRegister("UnhookMouse")
 EndFunc   ;==>HookMouse
