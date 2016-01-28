@@ -4,7 +4,7 @@
 #AutoIt3Wrapper_Compile_Both=y
 #AutoIt3Wrapper_UseX64=y
 #AutoIt3Wrapper_Res_Description=Google Chrome Portable
-#AutoIt3Wrapper_Res_Fileversion=3.7.2.0
+#AutoIt3Wrapper_Res_Fileversion=3.7.3.0
 #AutoIt3Wrapper_Res_LegalCopyright=甲壳虫<jdchenjian@gmail.com>
 #AutoIt3Wrapper_Res_Language=1033
 #AutoIt3Wrapper_AU3Check_Parameters=-q
@@ -33,7 +33,7 @@
 #include "AppMute.au3"
 
 Global $WinVersion = _WinAPI_GetVersion()
-Global Const $AppVersion = "3.7.2" ; MyChrome version
+Global Const $AppVersion = "3.7.3" ; MyChrome version
 Global $AppName = StringRegExpReplace(@ScriptName, "\.[^.]*$", "")
 Global $inifile = @ScriptDir & "\" & $AppName & ".ini"
 Global $Language = IniRead($inifile, "Settings", "Language", "Auto")
@@ -2613,7 +2613,7 @@ Func UpdateChrome($ChromePath, $Channel, $strUrl = "")
 		Return
 	EndIf
 
-	Local $updated, $urls
+	Local $updated, $urls, $iCancel
 	Local $LangDownloadingChrome = lang("Update", "DownloadingChrome", '下载 Chrome')
 	$IsUpdating = $LatestChromeUrls
 	$TempDir = $ChromeDir & "\~update"
@@ -2628,7 +2628,7 @@ Func UpdateChrome($ChromePath, $Channel, $strUrl = "")
 		TraySetClick(8)
 		TraySetToolTip("MyChrome")
 		TraySetOnEvent($TRAY_EVENT_PRIMARYDOWN, "TrayTipProgress")
-		Local $iCancel = TrayCreateItem(lang("Update", "CancelUpdate", '取消更新') & " ...")
+		$iCancel = TrayCreateItem(lang("Update", "CancelUpdate", '取消更新') & " ...")
 		TrayItemSetOnEvent(-1, "CancelUpdate")
 		TrayTip("MyChrome", StringFormat("%s ...\n%s", _
 				$LangDownloadingChrome, lang("Update", "DownloadChromeTips", '点击图标可查看下载进度')), 10, 1)
@@ -2919,15 +2919,15 @@ Func get_latest_chrome_ver($Channel, $x86 = 0, $inifile = "MyChrome.ini", $Proxy
 	EndIf
 
 	; http://code.google.com/p/omaha/wiki/ServerProtocol
-	Local $need_x86, $appid, $ap, $data, $match, $cohort, $cohortname
+	Local $need_x86, $appid, $ap, $data, $match
+	;Local $cohort
 	If $x86 Or $OSArch = "x86" Then
 		$need_x86 = True
 	EndIf
 	Switch $Channel
 		Case "Stable"
 			$appid = "4DC8B4CA-1BDA-483E-B5FA-D3C12E15B62D" ; protocol v3
-			$cohort = "1:b8/1ei:"
-			$cohortname = "Stable"
+			;$cohort = "1:b8/1ei:"
 			If $need_x86 Then
 				$ap = "-multi-chrome"
 				$OSArch = "x86"
@@ -2936,8 +2936,7 @@ Func get_latest_chrome_ver($Channel, $x86 = 0, $inifile = "MyChrome.ini", $Proxy
 			EndIf
 		Case "Beta"
 			$appid = "4DC8B4CA-1BDA-483E-B5FA-D3C12E15B62D"
-			$cohort = "1:8f:"
-			$cohortname = "Beta"
+			;$cohort = "1:8f:"
 			If $need_x86 Then
 				$ap = "1.1-beta"
 				$OSArch = "x86"
@@ -2946,8 +2945,7 @@ Func get_latest_chrome_ver($Channel, $x86 = 0, $inifile = "MyChrome.ini", $Proxy
 			EndIf
 		Case "Dev"
 			$appid = "4DC8B4CA-1BDA-483E-B5FA-D3C12E15B62D"
-			$cohort = "1:0:"
-			$cohortname = "Dev"
+			;$cohort = "1:0:"
 			If $need_x86 Then
 				$ap = "2.0-dev"
 				$OSArch = "x86"
@@ -2956,14 +2954,12 @@ Func get_latest_chrome_ver($Channel, $x86 = 0, $inifile = "MyChrome.ini", $Proxy
 			EndIf
 		Case "Canary"
 			$appid = "4EA16AC7-FD5A-47C3-875B-DBF4A2008C20"
-			$cohort = "11:jn:"
+			;$cohort = "11:jn:"
 			If $need_x86 Then
 				$ap = ""
 				$OSArch = "x86"
-				$cohortname = "Canary"
 			Else
 				$ap = "x64-canary"
-				$cohortname = "64-Bit"
 			EndIf
 	EndSwitch
 
@@ -2971,10 +2967,15 @@ Func get_latest_chrome_ver($Channel, $x86 = 0, $inifile = "MyChrome.ini", $Proxy
 	Local $physmemory = Round($a[1]/1024/1024)
 
 	; omaha protocol v3
-	$data = '<?xml version="1.0" encoding="UTF-8"?><request protocol="3.0" version="1.3.29.1" ismachine="0">' & _
+;~ 	$data = '<?xml version="1.0" encoding="UTF-8"?><request protocol="3.0" version="1.3.29.1" ismachine="0">' & _
+;~ 			'<hw physmemory="' & $physmemory & '" sse="1" sse2="1" sse3="1" ssse3="1" sse41="0" sse42="0" avx="0"/>' & _
+;~ 			'<os platform="win" version="' & $WinVersion & '" sp="' & @OSServicePack & '" arch="' & $OSArch & '"/>' & _
+;~ 			'<app appid="{' & $appid & '}" version="" nextversion="" ap="' & $ap & '" cohort="' & $cohort & '"><updatecheck/></app></request>'
+
+	$data = '<?xml version="1.0" encoding="UTF-8"?><request protocol="3.0" version="1.3.29.1" ismachine="0" installsource="update3web-ondemand" dedup="cr">' & _
 			'<hw physmemory="' & $physmemory & '" sse="1" sse2="1" sse3="1" ssse3="1" sse41="0" sse42="0" avx="0"/>' & _
 			'<os platform="win" version="' & $WinVersion & '" sp="' & @OSServicePack & '" arch="' & $OSArch & '"/>' & _
-			'<app appid="{' & $appid & '}" version="" nextversion="" ap="' & $ap & '" cohort="' & $cohort & '"><updatecheck/></app></request>'
+			'<app appid="{' & $appid & '}" version="" nextversion="" ap="' & $ap & '"><updatecheck/></app></request>'
 
 	For $i = 1 To 3
 		_SetVar("DLInfo", '|||||' & StringFormat($LangGetChromeChances, "Chrome", $i))
